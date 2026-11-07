@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>励洋辅助站 - 励洋编程辅助站点</title>
+<link rel="stylesheet" href="common.css">
+<style>
+  /* 基础变量与导航栏样式已移至根目录 common.css */
+
+  /* 公告栏 */
+  .notice-card {
+    background: var(--white);
+    border: 1px solid #fed7aa;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(249, 115, 22, 0.05);
+    overflow: hidden;
+  }
+
+  .notice-card .notice-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 20px;
+    background: var(--primary-light);
+    border-bottom: 1px solid #fed7aa;
+    font-size: 17px;
+    font-weight: bold;
+    color: var(--primary-dark);
+  }
+
+  .notice-card .notice-body {
+    padding: 10px 20px 14px;
+  }
+
+  .notice-card .notice-body p {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 10px 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text);
+    border-bottom: 1px dashed #fed7aa;
+  }
+
+  .notice-card .notice-body p:last-child {
+    border-bottom: none;
+  }
+
+  .notice-card .notice-body p .date {
+    flex-shrink: 0;
+    font-size: 13px;
+    color: var(--text-light);
+  }
+
+  /* 欢迎区：大标题 + 开放天数副标题 */
+  .hero {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+    color: var(--primary-dark);
+    margin-bottom: 8px;
+  }
+
+  .hero .od-sub {
+    font-size: 16px;
+    color: var(--text-light);
+  }
+
+  .hero .od-num {
+    display: inline-block;
+    min-width: 1.6em;
+    margin: 0 4px;
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--primary);
+    vertical-align: -2px;
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+</head>
+<body>
+
+<!-- 导航栏（公共组件：nav.js，样式在 common.css） -->
+<div id="siteNav"></div>
+<script src="nav.js" data-root=""></script>
+
+<!-- 主体 -->
+<main class="main">
+
+  <!-- 欢迎标题 -->
+  <section class="hero">
+    <h1>欢迎来到励洋辅助站</h1>
+    <p class="od-sub">励洋辅助站已经建立<span class="od-num" id="odNum">0</span>天！</p>
+  </section>
+
+  <!-- 公告栏 -->
+  <section class="notice-card">
+    <div class="notice-header">公告版</div>
+    <div class="notice-body">
+      <p><span>励洋辅助站0.0.1更新迎来</span><span class="date">2026-11-06</span></p>
+      <p><span>励洋辅助站建成</span><span class="date">2026-11-06</span></p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // 开放天数：从开站日期起算（跨天自动 +1），打开页面时数字快速滚动到目标值
+  (function () {
+    var START_DATE = new Date("2026-11-06T00:00:00");  // 开站日期，改这里即可
+    var now = new Date();
+    var days = Math.floor((now - START_DATE) / 86400000) + 1;  // 开站当天算第 1 天
+    if (days < 1) days = 1;
+
+    var el = document.getElementById("odNum");
+    var DURATION = 1500;  // 滚动动画时长（毫秒）
+
+    function animate(from, to) {
+      var start = null;
+      function step(ts) {
+        if (!start) start = ts;
+        var p = Math.min((ts - start) / DURATION, 1);
+        // easeOutCubic：先快后慢
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(from + (to - from) * eased);
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    animate(0, days);
+  })();
+</script>
+</body>
+</html>

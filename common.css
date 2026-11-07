@@ -1,0 +1,137 @@
+/* 励洋辅助站 - 全站公共样式（主题变量 / 基础重置 / 导航栏 / 主体容器）
+   各页面通过 <link> 引入；页面特有样式仍留在各自文件中 */
+:root {
+    --primary: #f97316;
+    --primary-dark: #ea580c;
+    --primary-light: #ffedd5;
+    --text: #3f3f46;
+    --text-light: #71717a;
+    --bg: #fff7ed;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ===== 导航栏 ===== */
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    padding: 0 32px;
+    background: var(--white);
+    box-shadow: 0 1px 3px rgba(249, 115, 22, 0.08);
+  }
+
+  .navbar .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  .navbar .logo img {
+    height: 36px;
+    width: auto;
+    display: block;
+    border-radius: 3px;
+  }
+
+  .nav-menus { display: flex; align-items: center; gap: 8px; }
+
+  .dropdown { position: relative; }
+
+  .dropdown-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    font-size: 15px;
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .dropdown-btn .arrow { font-size: 11px; transition: transform 0.2s; }
+
+  .dropdown:hover .dropdown-btn {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+  }
+
+  .dropdown:hover .dropdown-btn .arrow { transform: rotate(180deg); }
+
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 180px;
+    background: var(--white);
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    padding: 6px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+  }
+
+  .dropdown-menu::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 0;
+    right: 0;
+    height: 8px;
+  }
+
+  .dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .dropdown-menu a {
+    display: block;
+    padding: 10px 14px;
+    border-radius: 3px;
+    font-size: 14px;
+    color: var(--text);
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .dropdown-menu a:hover {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+  }
+
+  .dropdown-menu a .tag {
+    float: right;
+    font-size: 11px;
+    color: var(--text-light);
+    padding-top: 2px;
+  }
+
+  /* ===== 主体 ===== */
+  .main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 24px;
+  }

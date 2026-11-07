@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关于 - 励洋辅助站</title>
+<link rel="stylesheet" href="../common.css">
+<style>
+  /* 基础变量与导航栏样式已移至根目录 common.css */
+
+  .about-card {
+    background: var(--white);
+    border: 1px solid #fed7aa;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(249, 115, 22, 0.05);
+    padding: 32px;
+  }
+
+  .about-card h1 {
+    font-size: 26px;
+    color: var(--primary-dark);
+    margin-bottom: 8px;
+  }
+
+  .about-card .sub {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #ffedd5;
+  }
+
+  .about-card section { margin-bottom: 24px; }
+
+  .about-card section:last-child { margin-bottom: 0; }
+
+  .about-card h2 {
+    font-size: 18px;
+    color: var(--primary-dark);
+    margin-bottom: 10px;
+  }
+
+  .about-card p, .about-card li {
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .about-card ul, .about-card ol {
+    padding-left: 24px;
+  }
+
+  .about-card a {
+    color: var(--primary-dark);
+    text-decoration: none;
+  }
+
+  .about-card a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<!-- 导航栏（公共组件：nav.js，样式在 common.css） -->
+<div id="siteNav"></div>
+<script src="../nav.js" data-root="../"></script>
+
+<!-- 主体 -->
+<main class="main">
+  <div class="about-card">
+    <h1>关于励洋辅助站</h1>
+    <p class="sub">本页面介绍励洋辅助站的由来及其使用方法。</p>
+
+    <section>
+      <h2>这是什么？</h2>
+      <p>励洋辅助站是一个围绕励洋编程制作的静态辅助站点，提供课程讲义、题目展示等资源，配合励洋OJ使用。因为我们并不是励洋编程官方，所以实际结果请以官方为准。</p>
+    </section>
+
+    <section>
+      <h2>来历</h2>
+      <ul>
+        <li>在2026年11月7日，励洋辅助站计划出现</li>
+        <li>利用AI帮助以及人工制作，加上略扁平化的励洋风格</li>
+        <li>首页的「已开放天数」会在打开页面时自动滚动展示。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>课程板块</h2>
+      <ol>
+        <li>进入「课程」页面，在搜索框输入课程名或课时名，列表会随输入实时过滤。</li>
+        <li>输入完整名称后按 Enter 可直接跳转到对应课程。</li>
+        <li>进入课程页面后，点击「下载课堂讲义」按钮即可下载讲义文件。</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>题目板块</h2>
+      <ol>
+        <li>进入「题目」页面，在搜索框输入题号（如 0000），列表会随输入实时过滤。</li>
+        <li>输入完整题号后按 Enter 可直接跳转到该题。</li>
+        <li>题目页内可查看题面、样例，样例与题解均带一键复制按钮。</li>
+        <li>本题站仅展示题目，实际提交请前往 <a href="https://www.liyangoj.com/" target="_blank" rel="noopener">励洋OJ</a>。</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>联系我们</h2>
+      <p>FCF工作室：<a href="https://fcfstudio.pages.dev" target="_blank" rel="noopener">fcfstudio.pages.dev</a></p>
+    </section>
+  </div>
+</main>
+
+</body>
+</html>

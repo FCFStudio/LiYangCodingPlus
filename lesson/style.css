@@ -1,0 +1,84 @@
+/* 励洋辅助站 - 课程页公共样式（所有课程页共用）
+   基础变量与导航栏在根目录 common.css；本文件只含课程卡片相关样式 */
+
+.lesson-card {
+  background: var(--white);
+  border: 1px solid #fed7aa;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(249, 115, 22, 0.05);
+  padding: 32px;
+}
+
+.lesson-card h1 {
+  font-size: 26px;
+  color: var(--primary-dark);
+}
+
+.lesson-card h1 .lid {
+  margin-right: 12px;
+  color: var(--primary);
+}
+
+.lesson-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 14px 0 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #ffedd5;
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.lesson-meta span {
+  background: var(--primary-light);
+  padding: 4px 12px;
+  border-radius: 3px;
+  color: var(--primary-dark);
+}
+
+.lesson-card section { margin-bottom: 24px; }
+
+.lesson-card section:last-child { margin-bottom: 0; }
+
+.lesson-card h2 {
+  font-size: 18px;
+  color: var(--primary-dark);
+  margin-bottom: 10px;
+}
+
+.lesson-card p {
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+/* 讲义下载按钮 */
+.handout-btn {
+  display: inline-block;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 4px;
+  background: var(--primary);
+  color: var(--white);
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.handout-btn:hover { background: var(--primary-dark); }
+
+.handout-tip {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.back {
+  display: inline-block;
+  margin-top: 24px;
+  font-size: 14px;
+  color: var(--primary-dark);
+  text-decoration: none;
+}
+
+.back:hover { text-decoration: underline; }

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>课程列表 - 励洋辅助站</title>
+<link rel="stylesheet" href="common.css">
+<style>
+  /* 基础变量与导航栏样式已移至根目录 common.css */
+
+  .page-title {
+    font-size: 24px;
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+  }
+
+  /* 搜索框 */
+  .search-box {
+    display: flex;
+    margin-bottom: 16px;
+  }
+
+  .search-box input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #fed7aa;
+    border-right: none;
+    border-radius: 4px 0 0 4px;
+    background: var(--white);
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .search-box input:focus { border-color: var(--primary); }
+
+  .search-box .search-label {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    border: 1px solid #fed7aa;
+    border-radius: 0 4px 4px 0;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  /* 无匹配提示 */
+  .no-result {
+    display: none;
+    padding: 24px 20px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-light);
+  }
+
+  /* 课程列表 */
+  .lesson-list {
+    background: var(--white);
+    border: 1px solid #fed7aa;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(249, 115, 22, 0.05);
+    overflow: hidden;
+  }
+
+  .lesson-list a {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    text-decoration: none;
+    color: var(--text);
+    border-bottom: 1px solid #ffedd5;
+    transition: background 0.15s;
+  }
+
+  .lesson-list a:last-child { border-bottom: none; }
+
+  .lesson-list a:hover { background: var(--primary-light); }
+
+  .lesson-list .lid {
+    flex-shrink: 0;
+    font-weight: bold;
+    color: var(--primary-dark);
+    font-size: 15px;
+  }
+
+  .lesson-list .linfo { flex: 1; min-width: 0; }
+
+  .lesson-list .lname {
+    font-size: 15px;
+    font-weight: bold;
+  }
+
+  .lesson-list .lname:hover { color: var(--primary-dark); }
+
+  .lesson-list .ldesc {
+    margin-top: 2px;
+    font-size: 13px;
+    color: var(--text-light);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* 状态标签：updating=更新中，done=已完结 */
+  .lesson-list .status {
+    flex-shrink: 0;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 3px;
+    background: #dbeafe;
+    color: #1d4ed8;
+  }
+
+  .lesson-list .status.done {
+    background: #dcfce7;
+    color: #15803d;
+  }
+</style>
+</head>
+<body>
+
+<!-- 导航栏（公共组件：nav.js，样式在 common.css） -->
+<div id="siteNav"></div>
+<script src="nav.js" data-root=""></script>
+
+<!-- 主体 -->
+<main class="main">
+  <h1 class="page-title">课程列表</h1>
+
+  <!-- 搜索：输入即过滤，无需回车 -->
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="输入课程名搜索，如：第一课 或 C++" oninput="filterLessons()" autocomplete="off">
+    <span class="search-label">搜索课程</span>
+  </div>
+
+  <!-- 课程列表由 lesson/manifest.js 自动渲染；新增课程后运行根目录 update-manifests.ps1 更新 -->
+  <div class="lesson-list" id="lessonList">
+    <div class="no-result" id="noResult">没有匹配的课程</div>
+  </div>
+</main>
+
+<script src="lesson/manifest.js"></script>
+<script>
+  // 自动渲染课程列表（数据来自 manifest.js，不影响下方搜索功能）
+  (function () {
+    var list = window.LESSON_MANIFEST || [];
+    var html = "";
+    list.forEach(function (l) {
+      html += '<a href="lesson/' + l.file + '">'
+        + '<span class="lid">' + l.lid + '</span>'
+        + '<span class="linfo"><span class="lname">' + l.name + '</span></span>'
+        + '<span class="status ' + l.statusClass + '">' + l.status + '</span>'
+        + '</a>';
+    });
+    document.getElementById("lessonList").insertAdjacentHTML("afterbegin", html);
+  })();
+</script>
+
+<script>
+  // 匹配前归一化：全部小写 + 去除空格与制表符（仅用于搜索比较，不影响页面显示）
+  function norm(s) {
+    return s.toLowerCase().replace(/[\s\t]/g, "");
+  }
+
+  // 每输入一个字符即时过滤：仅匹配课时名与课程名（归一化后半匹配，不含简介）
+  function filterLessons() {
+    var q = norm(document.getElementById("searchInput").value);
+    var rows = document.querySelectorAll("#lessonList a");
+    var visible = 0;
+    rows.forEach(function (row) {
+      var lid = norm(row.querySelector(".lid").textContent);
+      var name = norm(row.querySelector(".lname").textContent);
+      var match = q === "" || lid.indexOf(q) !== -1 || name.indexOf(q) !== -1;
+      row.style.display = match ? "" : "none";
+      if (match) visible++;
+    });
+    document.getElementById("noResult").style.display = visible === 0 ? "block" : "none";
+  }
+
+  // 按 Enter：课时名或课程名归一化后完全匹配时跳转到该课，否则无效
+  (function () {
+    var input = document.getElementById("searchInput");
+    input.addEventListener("keydown", function (e) {
+      if (e.key !== "Enter") return;
+      var q = norm(input.value);
+      if (!q) return;
+      var rows = document.querySelectorAll("#lessonList a");
+      for (var i = 0; i < rows.length; i++) {
+        var lid = norm(rows[i].querySelector(".lid").textContent);
+        var name = norm(rows[i].querySelector(".lname").textContent);
+        if (lid === q || name === q) {
+          window.location.href = rows[i].getAttribute("href");
+          return;
+        }
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,240 @@
+
+  /* 基础变量与导航栏样式已移至根目录 common.css */
+
+  .problem-card {
+    background: var(--white);
+    border: 1px solid #fed7aa;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(249, 115, 22, 0.05);
+    padding: 32px;
+  }
+
+  .problem-card h1 {
+    font-size: 26px;
+    color: var(--primary-dark);
+  }
+
+  .problem-card h1 .pid {
+    margin-right: 12px;
+    color: var(--primary);
+  }
+
+  .problem-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 14px 0 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #ffedd5;
+    font-size: 13px;
+    color: var(--text-light);
+  }
+
+  .problem-meta span {
+    background: var(--primary-light);
+    padding: 4px 12px;
+    border-radius: 3px;
+    color: var(--primary-dark);
+  }
+
+  /* 标签区 */
+  .problem-tags {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: -8px 0 24px;
+    font-size: 14px;
+  }
+
+  .problem-tags .tags-label {
+    color: var(--text-light);
+  }
+
+  .problem-tags .tag-item {
+    display: inline-block;
+    padding: 3px 12px;
+    border: 1px solid #fed7aa;
+    border-radius: 3px;
+    background: #fffdf9;
+    color: var(--primary-dark);
+    font-size: 13px;
+  }
+
+  .problem-card section { margin-bottom: 24px; }
+
+  .problem-card section:last-child { margin-bottom: 0; }
+
+  .problem-card h2 {
+    font-size: 18px;
+    color: var(--primary-dark);
+    margin-bottom: 10px;
+  }
+
+  .problem-card p {
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .sample {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .sample .io {
+    flex: 1;
+    min-width: 240px;
+  }
+
+  .sample .io h3 {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 6px;
+  }
+
+  .sample pre {
+    background: #1f2937;
+    color: #f3f4f6;
+    border-radius: 4px;
+    padding: 12px 14px;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: auto;
+  }
+
+  /* 题解按钮与代码块 */
+  .solution-btn {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 4px;
+    background: var(--primary);
+    color: var(--white);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .solution-btn:hover { background: var(--primary-dark); }
+
+  .solution-box {
+    display: none;
+    margin-top: 14px;
+  }
+
+  .solution-box.show { display: block; }
+
+  /* 题解代码区：左侧行号栏 + 右侧代码（可横向滚动） */
+  .code-area {
+    display: flex;
+    background: #0d1117;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  /* 行号栏：固定窄宽度，不参与伸缩 */
+  .code-area .gutter {
+    flex: 0 0 auto;
+    width: 3.2em;
+    margin: 0;
+    padding: 16px 8px;
+    text-align: right;
+    background: #161b22;
+    border-right: 1px solid #30363d;
+    color: #6e7681;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    user-select: none;
+    overflow: hidden;
+  }
+
+  /* 代码区：占满剩余宽度，超宽时横向滚动 */
+  .code-area pre:not(.gutter) {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    background: transparent;
+    border-radius: 0;
+    padding: 16px;
+    color: #e6edf3;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-x: auto;
+  }
+
+  .copy-btn {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border: 1px solid #fed7aa;
+    border-radius: 3px;
+    background: var(--white);
+    color: var(--primary-dark);
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .copy-btn:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+  }
+
+  /* 代码块 + 右侧复制按钮（同一行） */
+  .code-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .code-row pre {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* 代码区在行内撑满剩余宽度 */
+  .code-row .code-area {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* 语法高亮配色 */
+  .k { color: #ff7b72; }  /* 关键字 */
+  .t { color: #79c0ff; }  /* 类型/库 */
+  .n { color: #a5d6ff; }  /* 数字/字符串 */
+  .c { color: #8b949e; font-style: italic; }  /* 注释 */
+  .p { color: #d2a8ff; }  /* 预处理 */
+
+  .submit-notice {
+    background: var(--primary-light);
+    border: 1px solid #fed7aa;
+    border-left: 4px solid var(--primary);
+    border-radius: 4px;
+    padding: 14px 20px;
+    margin-bottom: 20px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  .submit-notice a {
+    color: var(--primary-dark);
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  .submit-notice a:hover { text-decoration: underline; }
+
+  .back {
+    display: inline-block;
+    margin-top: 24px;
+    font-size: 14px;
+    color: var(--primary-dark);
+    text-decoration: none;
+  }
+
+  .back:hover { text-decoration: underline; }

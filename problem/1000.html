@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1000 - 励洋辅助站</title>
+<link rel="stylesheet" href="../common.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 导航栏（公共组件：nav.js，样式在 common.css） -->
+<div id="siteNav"></div>
+<script src="../nav.js" data-root="../"></script>
+
+<!-- 主体 -->
+<main class="main">
+  <!-- 提交提示框（顶部） -->
+  <div class="submit-notice">
+    本题仅为示例页面，实际提交请前往 <a href="https://www.liyangoj.com/problem.php?id=1000" target="_blank" rel="noopener">励洋OJ</a>。
+  </div>
+
+  <div class="problem-card">
+    <h1><span class="pid">1000</span><span class="pname">【编程入门】熟悉一下Online Judge的环境</span></h1>
+
+    <div class="problem-meta">
+      <span>时间限制：1.00s</span>
+      <span>内存限制：16MB</span>
+    </div>
+
+    <!-- 标签：加新标签就再复制一行 <span class="tag-item">标签名</span> -->
+    <div class="problem-tags">
+      <span class="tags-label">标签：</span>
+      <span class="tag-item">测试</span>
+      <span class="tag-item">基础语法</span>
+      <span class="tag-item">练习</span>
+    </div>
+
+    <section>
+      <h2>题目描述</h2>
+      <p>请不要笑。用来适应环境的题目，自然比较简单些。 计算2个整数的和。这两个整数都在1到100之间。</p>
+    </section>
+
+    <section>
+      <h2>输入格式</h2>
+      <p>输入只有一行，包括2个整数 <b>a</b> , <b>b</b> 。之间用一个空格分开。</p>
+    </section>
+
+    <section>
+      <h2>输出格式</h2>
+      <p>输出只有一行（这意味着末尾有一个回车符号），包括1个整数。</p>
+    </section>
+
+    <section>
+      <h2>样例</h2>
+      <div class="sample">
+        <div class="io">
+          <h3>输入样例</h3>
+          <div class="code-row">
+            <pre>1 2</pre>
+            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          </div>
+        </div>
+        <div class="io">
+          <h3>输出样例</h3>
+          <div class="code-row">
+            <pre>3</pre>
+            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>题解</h2>
+      <button class="solution-btn" onclick="toggleSolution()">显示题解</button>
+      <div class="solution-box" id="solutionBox">
+        <div class="code-row">
+          <div class="code-area">
+            <pre class="gutter" id="solutionGutter"></pre>
+            <pre id="solutionCode"></pre>
+          </div>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 题解源码：直接在这里改纯文本代码即可，语法高亮与行号自动生成（注意代码里不能出现 </script>） -->
+    <script type="text/plain" id="solutionSource">//1000
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    int a,b;
+    cin>>a>>b;
+    cout<<a+b;
+    return 0;
+}</script>
+
+    <a class="back" href="../problem.html">← 返回题目列表</a>
+  </div>
+</main>
+
+<script src="highlight.js"></script>
+<script>
+  function toggleSolution() {
+    var box = document.getElementById("solutionBox");
+    var btn = document.querySelector(".solution-btn");
+    var open = box.classList.toggle("show");
+    btn.textContent = open ? "隐藏题解" : "显示题解";
+  }
+
+  // 复制按钮：取同容器内 pre 的纯文本（高亮标签自动忽略）
+  function copyCode(btn) {
+    var pre = btn.parentElement.querySelector("pre:not(.gutter)");
+    var text = pre.innerText;
+    var done = function () {
+      var old = btn.textContent;
+      btn.textContent = "已复制 ✓";
+      setTimeout(function () { btn.textContent = old; }, 1500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done);
+    } else {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      done();
+    }
+  }
+</script>
+</body>
+</html>
