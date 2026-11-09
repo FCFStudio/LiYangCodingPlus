@@ -1,6 +1,6 @@
-# 旧版一题一页 / 一课一页的链接，永久跳转到动态页面，避免老链接失效
-/problem/0000.html  /problem?id=0000  301
-/problem/1000.html  /problem?id=1000  301
-/problem/1001.html  /problem?id=1001  301
-/lesson/1.html      /lesson?id=1      301
-/lesson/2.html      /lesson?id=2      301
+# 旧版一题一页 / 一课一页的链接，永久跳转到洛谷式地址，避免老链接失效
+/problem/0000.html  /problem/0000  301
+/problem/1000.html  /problem/1000  301
+/problem/1001.html  /problem/1001  301
+/lesson/1.html      /lesson/1      301
+/lesson/2.html      /lesson/2      301

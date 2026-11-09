@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>题目 - 励洋辅助站</title>
-<link rel="stylesheet" href="common.css">
-<link rel="stylesheet" href="problem/style.css">
+<link rel="stylesheet" href="/common.css">
+<link rel="stylesheet" href="/problem/style.css">
 <style>
   /* 基础变量与导航栏样式已移至根目录 common.css */
 
@@ -127,7 +127,7 @@
 
 <!-- 导航栏（公共组件：nav.js，样式在 common.css） -->
 <div id="siteNav"></div>
-<script src="nav.js" data-root=""></script>
+<script src="/nav.js"></script>
 
 <!-- 列表视图：无 ?id 时显示 -->
 <main class="main" id="listView">
@@ -203,18 +203,18 @@
       </div>
     </section>
 
-    <a class="back" href="problem.html">← 返回题目列表</a>
+    <a class="back" href="/problem">← 返回题目列表</a>
   </div>
 
   <div class="detail-error" id="detailError" hidden>
     <p id="detailErrorText">题目不存在</p>
-    <p style="margin-top:12px"><a href="problem.html">← 返回题目列表</a></p>
+    <p style="margin-top:12px"><a href="/problem">← 返回题目列表</a></p>
   </div>
 </main>
 
 <!-- 题解源码容器：由接口填充纯文本，highlight.js 负责高亮与行号 -->
 <script type="text/plain" id="solutionSource"></script>
-<script src="problem/highlight.js"></script>
+<script src="/problem/highlight.js"></script>
 
 <script>
   // ===== 题解交互 =====
@@ -262,7 +262,7 @@
           var tags = (p.tags || []).map(function (t) {
             return ' <span class="ptag">' + t + '</span>';
           }).join("");
-          html += '<a href="problem.html?id=' + encodeURIComponent(p.id) + '">'
+          html += '<a href="/problem/' + encodeURIComponent(p.id) + '">'
             + '<span class="pid">' + p.id + '</span>'
             + '<span class="pname">' + p.name + tags + '</span>'
             + '</a>';
@@ -311,8 +311,10 @@
 </script>
 
 <script>
-  // ===== 详情：problem.html?id=xxx =====
-  var PID = new URLSearchParams(window.location.search).get("id");
+  // ===== 详情：/problem/1000（洛谷式地址），兼容旧写法 problem.html?id=1000 =====
+  var m = window.location.pathname.match(/\/problem\/([^\/?#]+)/);
+  var PID = m ? decodeURIComponent(m[1]).replace(/\.html$/i, "")
+              : new URLSearchParams(window.location.search).get("id");
 
   function showError(msg) {
     document.getElementById("problemCard").hidden = true;

@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>课程 - 励洋辅助站</title>
-<link rel="stylesheet" href="common.css">
-<link rel="stylesheet" href="lesson/style.css">
+<link rel="stylesheet" href="/common.css">
+<link rel="stylesheet" href="/lesson/style.css">
 <style>
   /* 基础变量与导航栏样式已移至根目录 common.css */
 
@@ -131,7 +131,7 @@
 
 <!-- 导航栏（公共组件：nav.js，样式在 common.css） -->
 <div id="siteNav"></div>
-<script src="nav.js" data-root=""></script>
+<script src="/nav.js"></script>
 
 <!-- 列表视图：无 ?id 时显示 -->
 <main class="main" id="listView">
@@ -163,12 +163,12 @@
       <div id="dFiles"></div>
     </section>
 
-    <a class="back" href="lesson.html">← 返回课程列表</a>
+    <a class="back" href="/lesson">← 返回课程列表</a>
   </div>
 
   <div class="detail-error" id="detailError" hidden>
     <p id="detailErrorText">课程不存在</p>
-    <p style="margin-top:12px"><a href="lesson.html">← 返回课程列表</a></p>
+    <p style="margin-top:12px"><a href="/lesson">← 返回课程列表</a></p>
   </div>
 </main>
 
@@ -182,7 +182,7 @@
         var html = "";
         items.forEach(function (l) {
           var done = l.status && l.status.indexOf("完结") !== -1;
-          html += '<a href="lesson.html?id=' + encodeURIComponent(l.id) + '">'
+          html += '<a href="/lesson/' + encodeURIComponent(l.id) + '">'
             + '<span class="lid">' + l.title + '</span>'
             + '<span class="linfo"><span class="lname">' + l.name + '</span></span>'
             + (l.status ? '<span class="status ' + (done ? "done" : "") + '">' + l.status + '</span>' : '')
@@ -234,8 +234,10 @@
 </script>
 
 <script>
-  // ===== 详情：lesson.html?id=xxx =====
-  var LID = new URLSearchParams(window.location.search).get("id");
+  // ===== 详情：/lesson/1（洛谷式地址），兼容旧写法 lesson.html?id=1 =====
+  var m = window.location.pathname.match(/\/lesson\/([^\/?#]+)/);
+  var LID = m ? decodeURIComponent(m[1]).replace(/\.html$/i, "")
+              : new URLSearchParams(window.location.search).get("id");
 
   function showError(msg) {
     document.getElementById("lessonCard").hidden = true;
