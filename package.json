@@ -1,0 +1,16 @@
+{
+  "name": "liyang-plus",
+  "private": true,
+  "version": "0.1.0",
+  "description": "励洋辅助站（Cloudflare Pages + D1 动态版）",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "db:init": "wrangler d1 execute liyang-db --local --file=./db/schema.sql",
+    "db:seed": "wrangler d1 execute liyang-db --local --file=./db/seed.sql",
+    "db:init:remote": "wrangler d1 execute liyang-db --remote --file=./db/schema.sql",
+    "db:seed:remote": "wrangler d1 execute liyang-db --remote --file=./db/seed.sql",
+    "db:export": "node db/seed-from-html.mjs",
+    "build": "echo \"static site, no build step needed\"",
+    "deploy": "wrangler pages deploy public"
+  }
+}

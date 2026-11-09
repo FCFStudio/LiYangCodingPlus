@@ -1,0 +1,10 @@
+name = "liyang-plus"
+compatibility_date = "2026-07-17"
+pages_build_output_dir = "./public"
+
+# D1 数据库绑定：接口里用 env.DB 访问
+# database_id 需要先执行 `npx wrangler d1 create liyang-db`，把输出的 id 填到下面
+[[d1_databases]]
+binding = "DB"
+database_name = "liyang-db"
+database_id = "b2a48a7d-ac44-4bf6-be56-8218a052e5ef"

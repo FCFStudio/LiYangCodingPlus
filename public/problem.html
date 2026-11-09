@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>题目列表 - 励洋辅助站</title>
+<title>题目 - 励洋辅助站</title>
 <link rel="stylesheet" href="common.css">
+<link rel="stylesheet" href="problem/style.css">
 <style>
   /* 基础变量与导航栏样式已移至根目录 common.css */
 
@@ -106,6 +107,20 @@
     font-weight: normal;
     vertical-align: 1px;
   }
+
+  /* 详情加载失败 */
+  .detail-error {
+    background: var(--white);
+    border: 1px solid #fed7aa;
+    border-radius: 4px;
+    padding: 32px;
+    text-align: center;
+    color: var(--text-light);
+    font-size: 15px;
+  }
+
+  .detail-error a { color: var(--primary-dark); text-decoration: none; }
+  .detail-error a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -114,8 +129,8 @@
 <div id="siteNav"></div>
 <script src="nav.js" data-root=""></script>
 
-<!-- 主体 -->
-<main class="main">
+<!-- 列表视图：无 ?id 时显示 -->
+<main class="main" id="listView">
   <h1 class="page-title">题目列表</h1>
 
   <!-- 按题号搜索：输入即过滤，无需回车 -->
@@ -125,31 +140,141 @@
   </div>
 
   <div class="problem-list" id="problemList">
-    <!-- 题目列表由 problem/manifest.js 自动渲染；新增题目后运行根目录 update-manifests.ps1 更新 -->
+    <!-- 题目列表由 /api/problems 渲染 -->
     <div class="no-result" id="noResult">没有匹配的题目</div>
   </div>
 </main>
 
-<script src="problem/manifest.js"></script>
+<!-- 详情视图：problem.html?id=1000 时显示，内容由 /api/problem 填充 -->
+<main class="main" id="detailView" hidden>
+  <div class="submit-notice">
+    本题仅为示例页面，实际提交请前往 <a id="ojLink" href="https://www.liyangoj.com/" target="_blank" rel="noopener">励洋OJ</a>。
+  </div>
+
+  <div class="problem-card" id="problemCard">
+    <h1><span class="pid" id="dPid"></span><span class="pname" id="dPname"></span></h1>
+
+    <div class="problem-meta">
+      <span id="dTime" hidden></span>
+      <span id="dMemory" hidden></span>
+    </div>
+
+    <div class="problem-tags" id="dTagWrap" hidden>
+      <span class="tags-label">标签：</span>
+      <!-- 标签由接口填充 -->
+    </div>
+
+    <section id="secDesc">
+      <h2>题目描述</h2>
+      <div id="dDesc"></div>
+    </section>
+
+    <section id="secInput">
+      <h2>输入格式</h2>
+      <div id="dInput"></div>
+    </section>
+
+    <section id="secOutput">
+      <h2>输出格式</h2>
+      <div id="dOutput"></div>
+    </section>
+
+    <section id="secHint" hidden>
+      <h2>提示</h2>
+      <div id="dHint"></div>
+    </section>
+
+    <section id="secSample" hidden>
+      <h2>样例</h2>
+      <div class="sample" id="dSamples"></div>
+    </section>
+
+    <section id="secSolution" hidden>
+      <h2>题解</h2>
+      <button class="solution-btn" onclick="toggleSolution()">显示题解</button>
+      <div class="solution-box" id="solutionBox">
+        <div class="code-row">
+          <div class="code-area">
+            <pre class="gutter" id="solutionGutter"></pre>
+            <pre id="solutionCode"></pre>
+          </div>
+          <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+      </div>
+    </section>
+
+    <a class="back" href="problem.html">← 返回题目列表</a>
+  </div>
+
+  <div class="detail-error" id="detailError" hidden>
+    <p id="detailErrorText">题目不存在</p>
+    <p style="margin-top:12px"><a href="problem.html">← 返回题目列表</a></p>
+  </div>
+</main>
+
+<!-- 题解源码容器：由接口填充纯文本，highlight.js 负责高亮与行号 -->
+<script type="text/plain" id="solutionSource"></script>
+<script src="problem/highlight.js"></script>
+
 <script>
-  // 自动渲染题目列表（数据来自 manifest.js，不影响下方搜索功能）
-  (function () {
-    var list = window.PROBLEM_MANIFEST || [];
-    var html = "";
-    list.forEach(function (p) {
-      var tags = (p.tags || []).map(function (t) {
-        return ' <span class="ptag">' + t + '</span>';
-      }).join("");
-      html += '<a href="problem/' + p.file + '">'
-        + '<span class="pid">' + p.pid + '</span>'
-        + '<span class="pname">' + p.name + tags + '</span>'
-        + '</a>';
-    });
-    document.getElementById("problemList").insertAdjacentHTML("afterbegin", html);
-  })();
+  // ===== 题解交互 =====
+  function toggleSolution() {
+    var box = document.getElementById("solutionBox");
+    var btn = document.querySelector(".solution-btn");
+    var open = box.classList.toggle("show");
+    btn.textContent = open ? "隐藏题解" : "显示题解";
+  }
+
+  // 复制按钮：取同容器内 pre 的纯文本（高亮标签自动忽略）
+  function copyCode(btn) {
+    var pre = btn.parentElement.querySelector("pre:not(.gutter)");
+    var text = pre.innerText;
+    var done = function () {
+      var old = btn.textContent;
+      btn.textContent = "已复制 ✓";
+      setTimeout(function () { btn.textContent = old; }, 1500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done);
+    } else {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      done();
+    }
+  }
 </script>
 
 <script>
+  // ===== 列表：从接口加载 =====
+  var ALL_PROBLEMS = [];
+
+  function loadProblems() {
+    fetch("/api/problems")
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        ALL_PROBLEMS = data.items || [];
+        var html = "";
+        ALL_PROBLEMS.forEach(function (p) {
+          var tags = (p.tags || []).map(function (t) {
+            return ' <span class="ptag">' + t + '</span>';
+          }).join("");
+          html += '<a href="problem.html?id=' + encodeURIComponent(p.id) + '">'
+            + '<span class="pid">' + p.id + '</span>'
+            + '<span class="pname">' + p.name + tags + '</span>'
+            + '</a>';
+        });
+        document.getElementById("problemList").insertAdjacentHTML("afterbegin", html);
+      })
+      .catch(function () {
+        document.getElementById("noResult").textContent = "题目加载失败，请刷新重试";
+        document.getElementById("noResult").style.display = "block";
+      });
+  }
+
   // 匹配前归一化：全部小写 + 去除空格与制表符（仅用于搜索比较，不影响页面显示）
   function norm(s) {
     return s.toLowerCase().replace(/[\s\t]/g, "");
@@ -170,22 +295,106 @@
   }
 
   // 按 Enter：题号归一化后完全匹配时跳转到该题，否则无效
-  (function () {
-    var input = document.getElementById("searchInput");
-    input.addEventListener("keydown", function (e) {
-      if (e.key !== "Enter") return;
-      var q = norm(input.value);
-      if (!q) return;
-      var rows = document.querySelectorAll("#problemList a");
-      for (var i = 0; i < rows.length; i++) {
-        var pid = norm(rows[i].querySelector(".pid").textContent);
-        if (pid === q) {
-          window.location.href = rows[i].getAttribute("href");
-          return;
-        }
+  document.getElementById("searchInput").addEventListener("keydown", function (e) {
+    if (e.key !== "Enter") return;
+    var q = norm(this.value);
+    if (!q) return;
+    var rows = document.querySelectorAll("#problemList a");
+    for (var i = 0; i < rows.length; i++) {
+      var pid = norm(rows[i].querySelector(".pid").textContent);
+      if (pid === q) {
+        window.location.href = rows[i].getAttribute("href");
+        return;
       }
-    });
-  })();
+    }
+  });
+</script>
+
+<script>
+  // ===== 详情：problem.html?id=xxx =====
+  var PID = new URLSearchParams(window.location.search).get("id");
+
+  function showError(msg) {
+    document.getElementById("problemCard").hidden = true;
+    document.getElementById("detailError").hidden = false;
+    document.getElementById("detailErrorText").textContent = msg;
+  }
+
+  function renderDetail(p) {
+    document.title = p.id + " " + p.name + " - 励洋辅助站";
+
+    document.getElementById("dPid").textContent = p.id;
+    document.getElementById("dPname").textContent = p.name;
+
+    if (p.timeLimit) {
+      document.getElementById("dTime").textContent = "时间限制：" + p.timeLimit;
+      document.getElementById("dTime").hidden = false;
+    }
+    if (p.memoryLimit) {
+      document.getElementById("dMemory").textContent = "内存限制：" + p.memoryLimit;
+      document.getElementById("dMemory").hidden = false;
+    }
+
+    if (p.tags && p.tags.length) {
+      var wrap = document.getElementById("dTagWrap");
+      p.tags.forEach(function (t) {
+        wrap.insertAdjacentHTML("beforeend", '<span class="tag-item">' + t + '</span>');
+      });
+      wrap.hidden = false;
+    }
+
+    document.getElementById("dDesc").innerHTML = p.description || "";
+    document.getElementById("dInput").innerHTML = p.inputFormat || "";
+    document.getElementById("dOutput").innerHTML = p.outputFormat || "";
+
+    if (p.hint) {
+      document.getElementById("dHint").innerHTML = p.hint;
+      document.getElementById("secHint").hidden = false;
+    }
+
+    if (p.samples && p.samples.length) {
+      var box = document.getElementById("dSamples");
+      p.samples.forEach(function (s) {
+        box.insertAdjacentHTML("beforeend",
+          '<div class="io"><h3>输入样例</h3>'
+          + '<div class="code-row"><pre>' + s.input + '</pre>'
+          + '<button class="copy-btn" onclick="copyCode(this)">复制</button></div></div>'
+          + '<div class="io"><h3>输出样例</h3>'
+          + '<div class="code-row"><pre>' + s.output + '</pre>'
+          + '<button class="copy-btn" onclick="copyCode(this)">复制</button></div></div>');
+      });
+      document.getElementById("secSample").hidden = false;
+    }
+
+    if (p.solution) {
+      // 统一换行符，避免源码里的 CRLF 影响行号与复制
+      document.getElementById("solutionSource").textContent = p.solution.replace(/\r\n?/g, "\n");
+      renderSolution();
+      document.getElementById("secSolution").hidden = false;
+    }
+
+    // 提交链接带上题号（示例题 0000 不带）
+    if (p.id !== "0000") {
+      document.getElementById("ojLink").href = "https://www.liyangoj.com/problem.php?id=" + encodeURIComponent(p.id);
+    }
+  }
+
+  if (PID) {
+    document.getElementById("listView").hidden = true;
+    document.getElementById("detailView").hidden = false;
+
+    fetch("/api/problem?id=" + encodeURIComponent(PID))
+      .then(function (r) {
+        if (r.status === 404) throw new Error("题目不存在");
+        return r.json();
+      })
+      .then(renderDetail)
+      .catch(function (err) {
+        showError(err.message || "题目加载失败，请刷新重试");
+      });
+  } else {
+    loadProblems();
+  }
 </script>
 
 </body>
