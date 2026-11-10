@@ -19,24 +19,6 @@
     color: var(--primary);
   }
 
-  .problem-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin: 14px 0 24px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid #ffedd5;
-    font-size: 13px;
-    color: var(--text-light);
-  }
-
-  .problem-meta span {
-    background: var(--primary-light);
-    padding: 4px 12px;
-    border-radius: 3px;
-    color: var(--primary-dark);
-  }
-
   /* 标签区 */
   .problem-tags {
     display: flex;

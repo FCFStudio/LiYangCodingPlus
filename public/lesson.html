@@ -6,6 +6,8 @@
 <title>课程 - 励洋辅助站</title>
 <link rel="stylesheet" href="/common.css">
 <link rel="stylesheet" href="/lesson/style.css">
+<script src="/vendor/marked.min.js"></script>
+<script src="/md.js"></script>
 <style>
   /* 基础变量与导航栏样式已移至根目录 common.css */
 
@@ -158,6 +160,11 @@
       <span id="dStatus"></span>
     </div>
 
+    <section id="secContent" hidden>
+      <h2>课程内容</h2>
+      <div id="dContent" class="md-body"></div>
+    </section>
+
     <section id="secFiles" hidden>
       <h2>课堂讲义</h2>
       <div id="dFiles"></div>
@@ -254,6 +261,12 @@
     if (l.status) {
       document.getElementById("dStatus").textContent = "状态：" + l.status;
       document.getElementById("dMeta").hidden = false;
+    }
+
+    // 课程正文（Markdown，数据库里没填就不显示这一节）
+    if (l.content && l.content.trim()) {
+      document.getElementById("dContent").innerHTML = renderMD(l.content);
+      document.getElementById("secContent").hidden = false;
     }
 
     if (l.files && l.files.length) {

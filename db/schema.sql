@@ -35,11 +35,13 @@ CREATE TABLE IF NOT EXISTS problem_samples (
 );
 
 -- 课程主表：id 为课程编号（对应 URL 的 ?id=），title 为课时名（如「第一课」）
+-- content 为课程正文（Markdown 格式，可为空）
 CREATE TABLE IF NOT EXISTS lessons (
     id         TEXT PRIMARY KEY,
     title      TEXT NOT NULL DEFAULT '',
     name       TEXT NOT NULL,
     status     TEXT DEFAULT '',
+    content    TEXT DEFAULT '',
     sort_order INTEGER DEFAULT 0,
     updated_at TEXT DEFAULT (datetime('now', 'localtime'))
 );

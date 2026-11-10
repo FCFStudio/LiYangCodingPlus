@@ -5,12 +5,10 @@
 -- ============================================================
 
 -- ① 题目本体
-INSERT INTO problems (id, name, time_limit, memory_limit, description, input_format, output_format, hint, solution, sort_order)
+INSERT INTO problems (id, name, description, input_format, output_format, hint, solution, sort_order)
 VALUES (
   '1002',                              -- 题号（唯一）
   '【编程入门】两数求和',                -- 题目名字
-  '1.00s',                             -- 时间限制
-  '128MB',                             -- 内存限制
   '<p>输入两个整数，输出它们的和。</p>',  -- 题目描述（可写 HTML：<p> <b> <br>）
   '<p>一行两个整数，用空格隔开。</p>',    -- 输入格式
   '<p>一个整数。</p>',                   -- 输出格式

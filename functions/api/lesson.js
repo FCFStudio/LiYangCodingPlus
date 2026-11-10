@@ -7,7 +7,7 @@ export async function onRequestGet({ request, env }) {
     if (!id) return badRequest("缺少参数 id");
 
     const l = await env.DB.prepare(
-      "SELECT id, title, name, status FROM lessons WHERE id = ?"
+      "SELECT id, title, name, status, content FROM lessons WHERE id = ?"
     ).bind(id).first();
 
     if (!l) return notFound("课程不存在");
@@ -21,6 +21,7 @@ export async function onRequestGet({ request, env }) {
       title: l.title,
       name: l.name,
       status: l.status,
+      content: l.content || "",
       // 讲义文件放在 public/lesson/files/ 下
       files: files.results.map((f) => ({
         url: "/lesson/files/" + f.file_name,

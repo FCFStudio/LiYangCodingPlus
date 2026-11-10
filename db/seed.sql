@@ -1,10 +1,10 @@
 -- 由 db/seed-from-html.mjs 自动生成，可重复执行（INSERT OR REPLACE）
 
 INSERT OR REPLACE INTO problems (id, name, time_limit, memory_limit, description, input_format, output_format, hint, solution, sort_order) VALUES (
-  '0000', 'Test', '无', '无',
-  '<p>输入一个整数 <b>a</b> ，输出它。</p>',
-  '<p>一行，一个整数 <b>a</b> </p>',
-  '<p>一行，一个整数 <b>a</b> </p>',
+  '0000', 'Test', "", "",
+  '输入一个整数 **a** ，输出它。',
+  '一行，一个整数 **a**',
+  '一行，一个整数 **a**',
   '',
   '// 0000
 #include <bits/stdc++.h>
@@ -21,10 +21,10 @@ INSERT OR REPLACE INTO problem_tags (problem_id, tag, sort_order) VALUES ('0000'
 INSERT INTO problem_samples (problem_id, input, output, sort_order) VALUES ('0000', '1', '1', 1);
 
 INSERT OR REPLACE INTO problems (id, name, time_limit, memory_limit, description, input_format, output_format, hint, solution, sort_order) VALUES (
-  '1000', '【编程入门】熟悉一下Online Judge的环境', '1.00s', '16MB',
-  '<p>请不要笑。用来适应环境的题目，自然比较简单些。 计算2个整数的和。这两个整数都在1到100之间。</p>',
-  '<p>输入只有一行，包括2个整数 <b>a</b> , <b>b</b> 。之间用一个空格分开。</p>',
-  '<p>输出只有一行（这意味着末尾有一个回车符号），包括1个整数。</p>',
+  '1000', '【编程入门】熟悉一下Online Judge的环境', "", "",
+  '请不要笑。用来适应环境的题目，自然比较简单些。 计算2个整数的和。这两个整数都在1到100之间。',
+  '输入只有一行，包括2个整数 **a** , **b** 。之间用一个空格分开。',
+  '输出只有一行（这意味着末尾有一个回车符号），包括1个整数。',
   '',
   '//1000
 #include <bits/stdc++.h>
@@ -43,11 +43,11 @@ INSERT OR REPLACE INTO problem_tags (problem_id, tag, sort_order) VALUES ('1000'
 INSERT INTO problem_samples (problem_id, input, output, sort_order) VALUES ('1000', '1 2', '3', 1);
 
 INSERT OR REPLACE INTO problems (id, name, time_limit, memory_limit, description, input_format, output_format, hint, solution, sort_order) VALUES (
-  '1001', '【编程入门】A+B 输入输出练习I', '1.00s', '16MB',
-  '<p>你的任务是计算a+b。这是为了acm初学者专门设计的题目。你肯定发现还有其他题目跟这道题的标题类似，这些问题也都是专门为初学者提供的。
-输入两个数，回车后输出结果，然后再输入一对，回车再输出结果。。。。</p>',
-  '<p>输入包含一系列的<b>a</b>和<b>b</b>对，通过空格隔开。一对<b>a</b>和<b>b</b>占一行。</p>',
-  '<p>对于每次输入的每对<b>a</b>和<b>b</b>，你需要依次输出a、b的和。 </p>',
+  '1001', '【编程入门】A+B 输入输出练习I', "", "",
+  '你的任务是计算a+b。这是为了acm初学者专门设计的题目。你肯定发现还有其他题目跟这道题的标题类似，这些问题也都是专门为初学者提供的。
+输入两个数，回车后输出结果，然后再输入一对，回车再输出结果。。。。',
+  '输入包含一系列的**a**和**b**对，通过空格隔开。一对**a**和**b**占一行。',
+  '对于每次输入的每对**a**和**b**，你需要依次输出a、b的和。',
   '',
   '//1001
 #include <bits/stdc++.h>

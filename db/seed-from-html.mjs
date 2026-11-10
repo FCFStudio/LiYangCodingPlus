@@ -11,6 +11,35 @@ const root = fileURLToPath(new URL("..", import.meta.url));
 const q = (s) => "'" + String(s ?? "").replace(/'/g, "''") + "'";
 const stripComments = (html) => html.replace(/<!--[\s\S]*?-->/g, "");
 
+// HTML 片段 → Markdown（用于把旧版题面迁成 MD 存储）
+function htmlToMd(html) {
+  let t = String(html ?? "").trim();
+  if (!t) return "";
+  // 列表项
+  t = t.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, "- $1\n");
+  // 小标题
+  t = t.replace(/<h([1-6])[^>]*>([\s\S]*?)<\/h\1>/gi, (m, lv, c) => "#".repeat(+lv) + " " + c.trim() + "\n\n");
+  // 段落
+  t = t.replace(/<p[^>]*>([\s\S]*?)<\/p>/gi, "$1\n\n");
+  // 换行
+  t = t.replace(/<br\s*\/?>/gi, "\n");
+  // 链接
+  t = t.replace(/<a\s[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi, "[$2]($1)");
+  // 行内样式
+  t = t.replace(/<(?:b|strong)>([\s\S]*?)<\/(?:b|strong)>/gi, "**$1**");
+  t = t.replace(/<(?:i|em)>([\s\S]*?)<\/(?:i|em)>/gi, "*$1*");
+  t = t.replace(/<code>([\s\S]*?)<\/code>/gi, "`$1`");
+  // 剥掉其余标签
+  t = t.replace(/<[^>]+>/g, "");
+  // 实体解码
+  t = t.replace(/&nbsp;/gi, " ")
+       .replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+       .replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+       .replace(/&amp;/g, "&");
+  // 压缩多余空行
+  return t.replace(/\n{3,}/g, "\n\n").trim();
+}
+
 // pre 内容保持原样；若含裸标签（未转义），做一次转义避免破坏 HTML
 function safeCode(text) {
   const t = String(text ?? "").trim();
@@ -51,7 +80,8 @@ out.push("-- 由 db/seed-from-html.mjs 自动生成，可重复执行（INSERT O
 out.push("");
 
 // ---------- 题目 ----------
-const pdir = join(root, "public/problem");
+// 旧版静态页面已归档到 legacy/static-pages/，本脚本只从那里提取
+const pdir = join(root, "legacy/static-pages/problem");
 const pfiles = readdirSync(pdir).filter((f) => /\.html$/i.test(f)).sort();
 pfiles.forEach((file, idx) => {
   const raw = readFileSync(join(pdir, file), "utf8");
@@ -67,11 +97,12 @@ pfiles.forEach((file, idx) => {
   const samples = samplesOf(secs["样例"] || "");
 
   out.push(`INSERT OR REPLACE INTO problems (id, name, time_limit, memory_limit, description, input_format, output_format, hint, solution, sort_order) VALUES (`);
-  out.push(`  ${q(pid)}, ${q(pname)}, ${q(tl ? tl[1].trim() : "")}, ${q(ml ? ml[1].trim() : "")},`);
-  out.push(`  ${q(secs["题目描述"] || "")},`);
-  out.push(`  ${q(secs["输入格式"] || "")},`);
-  out.push(`  ${q(secs["输出格式"] || "")},`);
-  out.push(`  ${q(secs["提示"] || secs["说明"] || "")},`);
+  // 时限/内存不再展示与维护，固定为空
+  out.push(`  ${q(pid)}, ${q(pname)}, "", "",`);
+  out.push(`  ${q(htmlToMd(secs["题目描述"]))},`);
+  out.push(`  ${q(htmlToMd(secs["输入格式"]))},`);
+  out.push(`  ${q(htmlToMd(secs["输出格式"]))},`);
+  out.push(`  ${q(htmlToMd(secs["提示"] || secs["说明"]))},`);
   out.push(`  ${q(solution.trim())}, ${idx + 1});`);
   out.push("");
 
@@ -87,7 +118,7 @@ pfiles.forEach((file, idx) => {
 });
 
 // ---------- 课程 ----------
-const ldir = join(root, "public/lesson");
+const ldir = join(root, "legacy/static-pages/lesson");
 const lfiles = readdirSync(ldir).filter((f) => /^[^.]+\.html$/i.test(f)).sort((a, b) => parseInt(a) - parseInt(b));
 lfiles.forEach((file, idx) => {
   const raw = readFileSync(join(ldir, file), "utf8");

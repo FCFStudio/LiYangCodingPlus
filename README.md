@@ -1,118 +1,73 @@
 # 励洋辅助站
 
-为励洋编程制作的辅助站点：查看题解、查看讲义、查看课程。
+## 简介
 
-**不需要登录**：任何人打开链接就能看题、看讲义，即使还没学到那一课也能直接下载资料。
+这是一款为河北省石家庄市励洋编程的辅助站点，非励洋编程官方制作，具体请以励洋编程官方为准。
+励洋编程主站作为一个编程题目练习与评测平台（即OJ），其有很多缺陷：
+1. 缺少题解系统，学生不会难以解决。
+2. 需要用户登录，如果同样需要刷题的人无法查看。
+3. 标签制度混乱，展示不全。
+对这些问题，我们希望通过这个站点来解决。虽然这个站点弥补了以上的三点问题，但是因为没有服务器而导致无法准备评测系统。
 
-## 技术栈
+## 使用方法
 
-- **Cloudflare Pages**：托管静态资源（HTML / CSS / JS / PDF）
-- **Pages Functions**：`functions/api/*` 提供 JSON 接口
-- **Cloudflare D1**（SQLite）：存题目、课程、公告等结构化内容
+### 导航栏
 
-题目和课程不再一题一页、一课一页，而是由同一个页面从数据库读取内容动态渲染，并使用洛谷式地址：
+导航栏提供了便捷的跳转功能，分为三个下拉框：
+1. FCF工作室 用于跳转至作者“FCF工作室”的页面。
+2. 站内导航 用于导航至站内页面。
+3. 官方站点 用于导航至非本站相关的励洋编程官方站点。
 
-| 地址 | 内容 |
-|---|---|
-| `/problem` | 题目列表（可搜索） |
-| `/problem/1000` | 题号 1000 的题面（不存在的题号返回真正的 404 页） |
-| `/lesson` | 课程列表（可搜索） |
-| `/lesson/1` | 第 1 课 |
+#### “FCF工作室”下拉框
 
-路由由 `functions/problem/[id].js` 和 `functions/lesson/[id].js` 实现：题号存在时返回页面壳（内容由前端调接口渲染），旧版 `/problem/1000.html` 这类链接会 301 到新地址。
+“FCF工作室”下拉框提供了三个跳转页面，即“FCF官网”，“关于”，“我们的洛谷团队”这些页面，每个页面都有其相应的功能。
 
-## 目录结构
+##### “FCF官网”选项
 
-```
-public/                 静态资源（Pages 输出目录）
-  index.html            首页
-  problem.html          题目列表 + 题面（?id= 切换）
-  lesson.html           课程列表 + 课程页（?id= 切换）
-  about/                关于页
-  common.css            全站基础样式（变量、导航栏）
-  nav.js                全站公共导航栏
-  problem/style.css     题目页公共样式
-  problem/highlight.js  题解语法高亮与行号
-  lesson/style.css      课程页公共样式
-  lesson/files/         讲义 PDF
-functions/api/          接口
-  problems.js           GET /api/problems
-  problem.js            GET /api/problem?id=
-  lessons.js            GET /api/lessons
-  lesson.js             GET /api/lesson?id=
-  announcements.js      GET /api/announcements
-  _lib.js               公共工具（下划线开头不会被当成路由）
-db/
-  schema.sql            建表语句
-  seed.sql              初始数据
-  seed-from-html.mjs    从旧静态页面提取数据（一次性迁移工具）
-wrangler.toml           Pages + D1 配置
-legacy/                 旧版静态站归档
-```
+用于跳转到FCF工作室的官网，即“ https://fcfstudio.pages.dev/ ”。
 
-## 本地开发
+##### “关于”选项
 
-```bash
-npm install -g wrangler        # 如果还没装
-npm run db:init                # 本地建表
-npm run db:seed                # 本地导入初始数据
-npm run dev                    # 启动 http://127.0.0.1:8788
-```
+用于跳转到本站以及FCF工作室的介绍以及使用方法页面，同时包含了版权声明。
 
-本地数据库文件在 `.wrangler/state/`，删掉即可重置（重置后重新执行 `db:init` + `db:seed`）。
+##### “我们的洛谷团队”选项
 
-## 首次部署
+用于跳转到FCF工作室的官方洛谷团队页面。
 
-1. **创建 D1 数据库**
+#### “站内导航”下拉框
 
-   ```bash
-   npx wrangler login
-   npx wrangler d1 create liyang-db
-   ```
+“站内导航”下拉框提供了三个跳转页面，即“首页”，“课程”，“题目”这些页面，每个页面都有其相应的功能。
 
-   把输出的 `database_id` 填进 `wrangler.toml`，同时把 `package.json` 里 `dev` 脚本中 `--d1=DB=...` 的值也换成该 ID。
+##### “首页”选项
 
-2. **建表并导入数据（线上库）**
+用于跳转到励洋辅助站的首页https://lyplus.pages.dev/
 
-   ```bash
-   npm run db:init:remote
-   npm run db:seed:remote
-   ```
+##### “课程”选项
 
-3. **创建 Pages 项目**：连接 Git 仓库，构建输出目录填 `public`，框架预设选 None。
-   `functions/` 目录放在仓库根即可，Pages 会自动识别（注意是复数 `functions`）。
+用于跳转到励洋辅助站的课程列表https://lyplus.pages.dev/lesson
 
-4. **绑定数据库**：Pages 项目 → Settings → Bindings → 添加 D1 database binding：
-   - Variable name: `DB`
-   - D1 database: `liyang-db`
+##### “题目”选项
 
-5. 重新部署一次，访问 `/api/problems` 应返回 JSON。
+用于跳转到励洋辅助站的课程列表https://lyplus.pages.dev/problem
 
-## 内容维护
+#### “官方站点”下拉框
 
-内容都在 D1 里，用 SQL 改。常用操作：
+“官方站点”下拉框提供了四个跳转页面，即“励洋官网”，“励洋OJ”，“励洋学习平台”这些页面，每个页面都有其相应的功能。
 
-```bash
-# 修改某题题面
-npx wrangler d1 execute liyang-db --remote --command="UPDATE problems SET description='<p>新题面</p>' WHERE id='1000'"
+##### “励洋官网”选项
 
-# 新增题目
-npx wrangler d1 execute liyang-db --remote --command="INSERT INTO problems (id,name,time_limit,memory_limit,description,input_format,output_format,solution) VALUES ('1002','新题','1.00s','128MB','<p>描述</p>','<p>输入</p>','<p>输出</p>','int main(){}')"
+用于跳转到励洋编程官网的首页https://liyangcode.com/
 
-# 加标签
-npx wrangler d1 execute liyang-db --remote --command="INSERT INTO problem_tags (problem_id,tag,sort_order) VALUES ('1002','基础语法',1)"
+##### “励洋OJ”选项
 
-# 查看所有题目
-npx wrangler d1 execute liyang-db --remote --command="SELECT id,name FROM problems"
-```
+用于跳转到励洋编程的OJ页面https://www.liyangoj.com/
 
-字段说明见 `db/schema.sql`：
+##### “励洋学习平台”选项
 
-- `problems.description / input_format / output_format / hint` 存 HTML 片段（可写 `<b>` 等简单标签）
-- `problems.solution` 存**纯文本 C++ 代码**，前端自动高亮和生成行号
-- `problem_samples` 一题可多组样例
-- `lesson_files.file_name` 是 `public/lesson/files/` 下的文件名，`label` 是下载显示名
+用于跳转到励洋学习平台的页面https://s.5aqima.com/
 
-## 旧版归档
+##### “励洋编程洛谷”选项
 
-`legacy/` 下保留了迁移前的静态页面（一题一页、一课一页）与老的清单生成脚本，仅作参考，不参与部署。
+用于跳转到励洋辅助站的课程列表https://www.luogu.com.cn/team/59785
+
+不不不不不后面还没写完

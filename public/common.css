@@ -12,6 +12,50 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  /* ===== Markdown 正文（配合 /md.js 的 renderMD 使用） ===== */
+  .md-body { line-height: 1.8; font-size: 15px; }
+  .md-body p { margin: 10px 0; }
+  .md-body h1, .md-body h2, .md-body h3, .md-body h4 {
+    margin: 18px 0 10px;
+    color: var(--primary-dark);
+  }
+  .md-body h1 { font-size: 22px; }
+  .md-body h2 { font-size: 19px; }
+  .md-body h3 { font-size: 16px; }
+  .md-body ul, .md-body ol { margin: 10px 0; padding-left: 24px; }
+  .md-body li { margin: 4px 0; }
+  .md-body code {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 13px;
+  }
+  .md-body pre {
+    background: #27272a;
+    color: #e4e4e7;
+    padding: 14px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 12px 0;
+  }
+  .md-body pre code { background: transparent; color: inherit; padding: 0; }
+  .md-body blockquote {
+    border-left: 4px solid var(--primary);
+    background: var(--primary-light);
+    padding: 10px 14px;
+    margin: 12px 0;
+    color: var(--text-light);
+    border-radius: 0 4px 4px 0;
+  }
+  .md-body table { border-collapse: collapse; margin: 12px 0; width: 100%; }
+  .md-body th, .md-body td { border: 1px solid #fed7aa; padding: 8px 12px; text-align: left; }
+  .md-body th { background: var(--primary-light); color: var(--primary-dark); }
+  .md-body a { color: var(--primary-dark); }
+  .md-body hr { border: none; border-top: 1px solid #fed7aa; margin: 16px 0; }
+
+
   body {
     font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
     background: var(--bg);
