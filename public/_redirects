@@ -1,3 +1,11 @@
+# 错误页快捷访问（页面本体在 public/Error/，根目录 404.html 是它的副本）
+# 作用：方便直接访问/测试某个错误页，比如 /error/404 会跳到 /Error/404
+/error/404  /Error/404  301
+/error/403  /Error/403  301
+/error/500  /Error/500  301
+/error/502  /Error/502  301
+/error/503  /Error/503  301
+
 # 旧版一题一页 / 一课一页的链接，永久跳转到洛谷式地址，避免老链接失效
 /problem/0000.html  /problem/0000  301
 /problem/1000.html  /problem/1000  301

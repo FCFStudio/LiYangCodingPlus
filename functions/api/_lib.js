@@ -23,54 +23,32 @@ export function serverError(err) {
   return json({ error: "服务器内部错误" }, 500, "no-store");
 }
 
-// 漂亮的 404 页（用于 /problem/xxx、/lesson/xxx 这类路径路由）
-export function notFoundPage(kind, id) {
-  const html = `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${kind}不存在 - 励洋辅助站</title>
-<link rel="stylesheet" href="/common.css">
-<style>
-  .notfound-card {
-    background: var(--white);
-    border: 1px solid #fed7aa;
-    border-radius: 4px;
-    box-shadow: 0 1px 4px rgba(249, 115, 22, 0.05);
-    padding: 40px 32px;
-    text-align: center;
+// 漂亮的错误页：读取 public/Error/ 下的静态页面并按指定状态码返回
+// （页面本体在 public/Error/，根目录 404.html 是它的副本，供 Pages 自动 404 使用）
+async function errorPage(env, request, path, status) {
+  try {
+    const res = await env.ASSETS.fetch(new URL(path, new URL(request.url).origin));
+    return new Response(res.body, {
+      status,
+      headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" },
+    });
+  } catch (e) {
+    return new Response("Error", {
+      status,
+      headers: { "content-type": "text/plain; charset=utf-8" },
+    });
   }
-  .notfound-card h1 { font-size: 40px; color: var(--primary-dark); margin-bottom: 8px; }
-  .notfound-card p { color: var(--text-light); font-size: 15px; margin-bottom: 20px; }
-  .notfound-card a {
-    display: inline-block;
-    padding: 10px 24px;
-    background: var(--primary);
-    color: var(--white);
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: 14px;
-  }
-  .notfound-card a:hover { background: var(--primary-dark); }
-</style>
-</head>
-<body>
-<div id="siteNav"></div>
-<script src="/nav.js" data-root=""></script>
-<main class="main">
-  <div class="notfound-card">
-    <h1>404</h1>
-    <p>${kind === "题目" ? `题号 <b>${id}</b> 还没有收录` : `课程 <b>${id}</b> 不存在`}，或地址写错了。</p>
-    <a href="/problem">去题目列表看看</a>
-  </div>
-</main>
-</body>
-</html>`;
-  return new Response(html, {
-    status: 404,
-    headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" },
-  });
+}
+
+// 404 页（题号/课程不存在时使用，页面来自 public/Error/404.html）
+export function notFoundPage(env, request) {
+  return errorPage(env, request, "/Error/404.html", 404);
+}
+
+// 500 页（页面路由抛异常时使用，页面来自 public/Error/500.html）
+export function serverErrorPage(env, request, err) {
+  if (err) console.error(err);
+  return errorPage(env, request, "/Error/500.html", 500);
 }
 
 // 取查询参数并做基本清洗

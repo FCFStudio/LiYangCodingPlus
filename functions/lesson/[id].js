@@ -1,10 +1,10 @@
 // GET /lesson/1 —— 洛谷式课程地址
 // 课程存在：返回课程壳页（前端 JS 从地址栏取课程号并调 /api/lesson 渲染）
-// 课程不存在：返回真正的 404 页面
+// 课程不存在：返回真正的 404 页面（public/Error/404.html）
 // 注意：
 //   - 请求带 .html 结尾（旧版链接）→ 301 到无扩展名的洛谷式地址
 //   - 请求是静态文件（如 /lesson/style.css、/lesson/files/1.pdf）→ 原样交给静态资产服务
-import { serverError, notFoundPage } from "../api/_lib.js";
+import { serverError, notFoundPage, serverErrorPage } from "../api/_lib.js";
 
 export async function onRequestGet({ request, env, params }) {
   try {
@@ -23,9 +23,9 @@ export async function onRequestGet({ request, env, params }) {
     }
 
     const row = await env.DB.prepare("SELECT id FROM lessons WHERE id = ?").bind(seg).first();
-    if (!row) return notFoundPage("课程", seg);
+    if (!row) return notFoundPage(env, request);
     return env.ASSETS.fetch(new URL("/lesson.html", url.origin));
   } catch (err) {
-    return serverError(err);
+    return serverErrorPage(env, request, err);
   }
 }
