@@ -82,6 +82,46 @@
     vertical-align: -2px;
     font-variant-numeric: tabular-nums;
   }
+
+  /* 快捷跳转栏 */
+  .quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 18px;
+  }
+
+  .quick-links a {
+    flex: 1;
+    min-width: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 10px;
+    background: var(--white);
+    border: 1px solid #fed7aa;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(249, 115, 22, 0.05);
+    color: var(--primary-dark);
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+  }
+
+  .quick-links a:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+  }
+
+  .quick-links a.current {
+    background: var(--primary);
+    border-color: var(--primary-dark);
+    color: var(--white);
+  }
+
+  .quick-links a.current:hover { background: var(--primary-dark); }
 </style>
 </head>
 <body>
@@ -102,11 +142,18 @@
   <!-- 公告栏 -->
   <section class="notice-card">
     <div class="notice-header">公告版</div>
-    <div class="notice-body">
-      <p><span>励洋辅助站0.0.1更新迎来</span><span class="date">2026-11-06</span></p>
-      <p><span>励洋辅助站建成</span><span class="date">2026-11-06</span></p>
+    <div class="notice-body" id="noticeBody">
+      <p><span>公告加载中…</span></p>
     </div>
   </section>
+
+  <!-- 快捷跳转栏：对应导航栏「站内导航」的四个页面 -->
+  <nav class="quick-links" aria-label="快捷跳转">
+    <a href="/" class="current">首页</a>
+    <a href="/lesson">课程</a>
+    <a href="/problem">题目</a>
+    <a href="/user/">查询励洋用户</a>
+  </nav>
 
 </main>
 
@@ -135,6 +182,28 @@
     }
 
     animate(0, days);
+  })();
+
+  // 公告：从数据库读取，改库即生效，无需重新部署
+  (function () {
+    var box = document.getElementById("noticeBody");
+    fetch("/api/announcements")
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        var items = d.items || [];
+        if (!items.length) {
+          box.innerHTML = "<p><span>暂无公告</span></p>";
+          return;
+        }
+        var html = "";
+        items.forEach(function (a) {
+          html += "<p><span>" + a.content + "</span><span class=\"date\">" + a.date + "</span></p>";
+        });
+        box.innerHTML = html;
+      })
+      .catch(function () {
+        box.innerHTML = "<p><span>公告加载失败，请刷新重试</span></p>";
+      });
   })();
 </script>
 </body>

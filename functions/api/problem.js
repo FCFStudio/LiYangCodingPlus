@@ -7,7 +7,7 @@ export async function onRequestGet({ request, env }) {
     if (!id) return badRequest("缺少参数 id");
 
     const p = await env.DB.prepare(
-      "SELECT id, name, time_limit, memory_limit, description, input_format, output_format, hint, solution FROM problems WHERE id = ?"
+      "SELECT id, name, description, input_format, output_format, hint, solution FROM problems WHERE id = ?"
     ).bind(id).first();
 
     if (!p) return notFound("题目不存在");
@@ -23,8 +23,6 @@ export async function onRequestGet({ request, env }) {
     return json({
       id: p.id,
       name: p.name,
-      timeLimit: p.time_limit,
-      memoryLimit: p.memory_limit,
       description: p.description,
       inputFormat: p.input_format,
       outputFormat: p.output_format,

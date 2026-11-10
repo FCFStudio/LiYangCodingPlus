@@ -96,9 +96,8 @@ pfiles.forEach((file, idx) => {
   const solution = (/<script type="text\/plain" id="solutionSource">([\s\S]*?)<\/script>/.exec(html) || [])[1] || "";
   const samples = samplesOf(secs["样例"] || "");
 
-  out.push(`INSERT OR REPLACE INTO problems (id, name, time_limit, memory_limit, description, input_format, output_format, hint, solution, sort_order) VALUES (`);
-  // 时限/内存不再展示与维护，固定为空
-  out.push(`  ${q(pid)}, ${q(pname)}, "", "",`);
+  out.push(`INSERT OR REPLACE INTO problems (id, name, description, input_format, output_format, hint, solution, sort_order) VALUES (`);
+  out.push(`  ${q(pid)}, ${q(pname)},`);
   out.push(`  ${q(htmlToMd(secs["题目描述"]))},`);
   out.push(`  ${q(htmlToMd(secs["输入格式"]))},`);
   out.push(`  ${q(htmlToMd(secs["输出格式"]))},`);

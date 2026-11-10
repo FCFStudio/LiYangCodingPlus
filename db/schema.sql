@@ -2,12 +2,10 @@
 -- 执行：npx wrangler d1 execute liyang-db --local --file=./db/schema.sql
 --       npx wrangler d1 execute liyang-db --remote --file=./db/schema.sql
 
--- 题目主表：题面内容直接存 HTML 片段（题目描述/输入格式/输出格式支持 <b> 等简单标签）
+-- 题目主表：题面内容存 Markdown（题目描述/输入格式/输出格式/提示）
 CREATE TABLE IF NOT EXISTS problems (
     id            TEXT PRIMARY KEY,
     name          TEXT NOT NULL,
-    time_limit    TEXT DEFAULT '',
-    memory_limit  TEXT DEFAULT '',
     description   TEXT DEFAULT '',
     input_format  TEXT DEFAULT '',
     output_format TEXT DEFAULT '',
