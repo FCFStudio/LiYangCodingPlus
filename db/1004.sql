@@ -3,10 +3,10 @@ INSERT INTO problems (id, name, description, input_format, output_format, hint, 
 VALUES (
   '1004',
   '【编程入门】编程求1*2*3*...*n',
-  '编程求**1*2*3*...*n**',
+  '编程求 `1*2*3*...*n` 的值',
   '输入一行，只有一个整数n(1<=n<=10)',
   '输出只有一行（这意味着末尾有一个回车符号），包括1个整数。',
-  'i+=2可以让其自增2',
+  '试着参考1003',
   '#include <bits/stdc++.h>
 using namespace std;
 int main(){
@@ -24,3 +24,4 @@ INSERT INTO problem_tags (problem_id, tag, sort_order) VALUES ('1004', '简单�
 INSERT INTO problem_tags (problem_id, tag, sort_order) VALUES ('1004', '编程入门', 2);
 -- ③ 样例（【增加示例】要多组样例就复制这一行，sort_order 填第几组：1、2、3…）
 INSERT INTO problem_samples (problem_id, input, output, sort_order) VALUES ('1004', '5', '120', 1);
+

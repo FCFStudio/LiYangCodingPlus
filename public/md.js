@@ -9,6 +9,9 @@ function renderMD(text) {
   var t = String(text == null ? "" : text);
   // 已包含 HTML 标签 → 按旧内容处理
   if (/<[a-z][^>]*>/i.test(t)) return t;
+  // 乘法星号保护：紧跟在数字/小数点后面的 * 是数学符号不是 Markdown 标记，
+  // 转成 HTML 实体，防止被误解析成斜体（如 1*2*3*...*n、**1*2*3*...*n**）
+  t = t.replace(/([\d.])\*(?=[\d.a-z])/gi, "$1&#42;");
   // 纯 Markdown → 交给 marked 渲染
   if (window.marked && marked.parse) {
     try { return marked.parse(t); } catch (e) { return t; }
