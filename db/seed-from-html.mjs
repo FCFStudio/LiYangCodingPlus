@@ -102,7 +102,7 @@ pfiles.forEach((file, idx) => {
   out.push(`  ${q(htmlToMd(secs["输入格式"]))},`);
   out.push(`  ${q(htmlToMd(secs["输出格式"]))},`);
   out.push(`  ${q(htmlToMd(secs["提示"] || secs["说明"]))},`);
-  out.push(`  ${q(solution.trim())}, ${idx + 1});`);
+  out.push(`  ${q(solution.trim())}, ${parseInt(pid, 10)});`);
   out.push("");
 
   tags.forEach((t, i) => {
@@ -132,7 +132,7 @@ lfiles.forEach((file, idx) => {
   // 课程 id 用文件名（1、2…），课时名（第一课）存 title
   const lessonKey = file.replace(/\.html$/i, "");
 
-  out.push(`INSERT OR REPLACE INTO lessons (id, title, name, status, sort_order) VALUES (${q(lessonKey)}, ${q(lid)}, ${q(lname)}, ${q(status)}, ${idx + 1});`);
+  out.push(`INSERT OR REPLACE INTO lessons (id, title, name, status, sort_order) VALUES (${q(lessonKey)}, ${q(lid)}, ${q(lname)}, ${q(status)}, ${parseInt(lessonKey, 10)});`);
   if (href) {
     const fileName = href.replace(/^files\//, "");
     out.push(`INSERT INTO lesson_files (lesson_id, file_name, label, tip, sort_order) VALUES (${q(lessonKey)}, ${q(fileName)}, ${q(label)}, ${q(tip)}, 1);`);
@@ -141,8 +141,7 @@ lfiles.forEach((file, idx) => {
 });
 
 // ---------- 公告与站点信息 ----------
-out.push(`INSERT OR REPLACE INTO announcements (id, content, date, sort_order) VALUES (1, '励洋辅助站0.0.1更新迎来', '2026-11-06', 1);`);
-out.push(`INSERT OR REPLACE INTO announcements (id, content, date, sort_order) VALUES (2, '励洋辅助站建成', '2026-11-06', 2);`);
+// 公告不放在种子里，需要时用 db/template-announcement.sql 添加（按日期排序，编号自动生成）
 out.push(`INSERT OR REPLACE INTO site_meta (key, value) VALUES ('start_date', '2026-11-06');`);
 out.push(`INSERT OR REPLACE INTO site_meta (key, value) VALUES ('site_version', '0.0.1');`);
 out.push("");

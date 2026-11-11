@@ -14,7 +14,7 @@ int main() {
     cin>>a;
     cout<<a;
     return 0;
-}', 1);
+}', 0);
 
 INSERT OR REPLACE INTO problem_tags (problem_id, tag, sort_order) VALUES ('0000', '测试', 1);
 
@@ -34,7 +34,7 @@ int main() {
     cin>>a>>b;
     cout<<a+b;
     return 0;
-}', 2);
+}', 1000);
 
 INSERT OR REPLACE INTO problem_tags (problem_id, tag, sort_order) VALUES ('1000', '测试', 1);
 INSERT OR REPLACE INTO problem_tags (problem_id, tag, sort_order) VALUES ('1000', '基础语法', 2);
@@ -58,7 +58,7 @@ int main(){
 	    cout<<a+b<<endl;
 	}
 	return 0;
-}', 3);
+}', 1001);
 
 INSERT OR REPLACE INTO problem_tags (problem_id, tag, sort_order) VALUES ('1001', '算法笔记', 1);
 INSERT OR REPLACE INTO problem_tags (problem_id, tag, sort_order) VALUES ('1001', '基础循环', 2);
@@ -71,7 +71,5 @@ INSERT INTO lesson_files (lesson_id, file_name, label, tip, sort_order) VALUES (
 INSERT OR REPLACE INTO lessons (id, title, name, status, sort_order) VALUES ('2', '第二课', '顺序结构程序设计', '更新中', 2);
 INSERT INTO lesson_files (lesson_id, file_name, label, tip, sort_order) VALUES ('2', '2.pdf', '第二课-课堂讲义.pdf', '讲义随课程更新。', 1);
 
-INSERT OR REPLACE INTO announcements (id, content, date, sort_order) VALUES (1, '励洋辅助站0.0.1更新迎来', '2026-11-06', 1);
-INSERT OR REPLACE INTO announcements (id, content, date, sort_order) VALUES (2, '励洋辅助站建成', '2026-11-06', 2);
 INSERT OR REPLACE INTO site_meta (key, value) VALUES ('start_date', '2026-11-06');
 INSERT OR REPLACE INTO site_meta (key, value) VALUES ('site_version', '0.0.1');

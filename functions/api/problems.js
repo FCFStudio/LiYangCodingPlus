@@ -3,8 +3,9 @@ import { json, serverError } from "./_lib.js";
 
 export async function onRequestGet({ env }) {
   try {
+    // 题目列表按题号自动升序（由小到大），不再依赖 sort_order 手工维护
     const probs = await env.DB.prepare(
-      "SELECT id, name FROM problems ORDER BY sort_order, id"
+      "SELECT id, name FROM problems ORDER BY CAST(id AS INTEGER)"
     ).all();
 
     const tags = await env.DB.prepare(

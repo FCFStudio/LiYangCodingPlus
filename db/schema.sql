@@ -54,12 +54,11 @@ CREATE TABLE IF NOT EXISTS lesson_files (
     sort_order INTEGER DEFAULT 0
 );
 
--- 首页公告
+-- 首页公告：id 自增（不用手填），按 date 排序（date 统一写 年-月-日）
 CREATE TABLE IF NOT EXISTS announcements (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
     content    TEXT NOT NULL,
-    date       TEXT DEFAULT '',
-    sort_order INTEGER DEFAULT 0
+    date       TEXT DEFAULT ''
 );
 
 -- 站点元信息（开站日期等）

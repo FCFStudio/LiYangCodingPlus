@@ -13,11 +13,12 @@ export async function onRequestGet({ request, env }) {
     if (!p) return notFound("题目不存在");
 
     const tags = await env.DB.prepare(
-      "SELECT tag FROM problem_tags WHERE problem_id = ? ORDER BY sort_order"
+      "SELECT tag FROM problem_tags WHERE problem_id = ? ORDER BY sort_order, rowid"
     ).bind(id).all();
 
+    // 样例按组号（sort_order）排序；组号相同时按录入先后（id 自增）兜底
     const samples = await env.DB.prepare(
-      "SELECT input, output FROM problem_samples WHERE problem_id = ? ORDER BY sort_order"
+      "SELECT input, output FROM problem_samples WHERE problem_id = ? ORDER BY sort_order, id"
     ).bind(id).all();
 
     return json({
