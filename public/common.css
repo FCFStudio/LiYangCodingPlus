@@ -58,11 +58,12 @@
 
   body {
     font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
-    /* 全站背景：星星图案平铺（参照励洋 OJ loginpage 的背景写法，改为平铺以免高屏留白） */
-    background-color: var(--bg);
+    /* 全站背景：一张大图铺满视口（与励洋 OJ 一致，星星大而稀疏，不再小图平铺） */
+    background-color: #fffdfa;
     background-image: url("/background/background.png");
-    background-repeat: repeat;
-    background-size: 480px auto;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center top;
     background-attachment: fixed;
     color: var(--text);
     min-height: 100vh;
