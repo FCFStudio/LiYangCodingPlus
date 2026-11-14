@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>查询提交记录 - 励洋辅助站</title>
+<link rel="icon" href="/favicon/favicon.ico">
+<link rel="stylesheet" href="/common.css">
+<style>
+  .status-main {
+    min-height: calc(100vh - 60px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .status-card {
+    width: 100%;
+    max-width: 460px;
+    background: var(--white);
+    border: 1px solid #fed7aa;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(249, 115, 22, 0.08);
+    padding: 36px 32px;
+    text-align: center;
+  }
+  .status-card h1 {
+    font-size: 22px;
+    color: var(--primary-dark);
+    margin-bottom: 8px;
+  }
+  .status-card .sub {
+    color: var(--text-light);
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+  .form-row { margin-bottom: 12px; }
+  .form-row input,
+  .form-row select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #fdba74;
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.15s;
+    box-sizing: border-box;
+    background: var(--white);
+    color: inherit;
+  }
+  .form-row input:focus,
+  .form-row select:focus { border-color: var(--primary); }
+  /* 第三行：两个下拉框水平排列 */
+  .select-row {
+    display: flex;
+    gap: 12px;
+  }
+  .select-row select { flex: 1; }
+  #goBtn {
+    width: 100%;
+    margin-top: 14px;
+    padding: 12px;
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  #goBtn:hover { background: var(--primary-dark); }
+  .err-tip {
+    display: none;
+    margin-top: 12px;
+    color: #dc2626;
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+<div id="siteNav"></div>
+<script src="/nav.js"></script>
+
+<main class="status-main">
+  <div class="status-card">
+    <h1>查询提交记录</h1>
+    <p class="sub">按用户名、题号、语言、评测状态筛选 OJ 的提交记录</p>
+
+    <!-- 第一行：用户名 -->
+    <div class="form-row">
+      <input id="userName" type="text" autocomplete="off" placeholder="用户名（可不填）">
+    </div>
+
+    <!-- 第二行：题号 -->
+    <div class="form-row">
+      <input id="problemId" type="text" inputmode="numeric" autocomplete="off" placeholder="题号（可不填，如 1000）">
+    </div>
+
+    <!-- 第三行：语言 + 状态 -->
+    <div class="form-row select-row">
+      <select id="language">
+        <option value="-1" selected>All</option>
+        <option value="0">C</option>
+        <option value="1">C++</option>
+        <option value="2">Pascal（异常评测机）</option>
+        <option value="3">Java</option>
+        <option value="6">Python</option>
+      </select>
+      <select id="jresult">
+        <option value="-1" selected>All</option>
+        <option value="4">正确</option>
+        <option value="5">格式错误</option>
+        <option value="6">答案错误</option>
+        <option value="7">时间超限</option>
+        <option value="8">内存超限</option>
+        <option value="9">输出超限</option>
+        <option value="10">运行错误</option>
+        <option value="11">编译错误</option>
+        <option value="0">等待</option>
+        <option value="1">等待重判</option>
+        <option value="2">编译中</option>
+        <option value="3">运行并评判</option>
+      </select>
+    </div>
+
+    <!-- 第四行：查询按钮 -->
+    <button id="goBtn" onclick="go()">查 询</button>
+    <p class="err-tip" id="errTip">题号只能是数字</p>
+  </div>
+</main>
+
+<script>
+  function go() {
+    var user = document.getElementById("userName").value.trim();
+    var pid  = document.getElementById("problemId").value.trim();
+    var lang = document.getElementById("language").value;
+    var jres = document.getElementById("jresult").value;
+
+    var err = document.getElementById("errTip");
+    if (pid && !/^\d+$/.test(pid)) {
+      err.textContent = "题号只能是数字";
+      err.style.display = "block";
+      document.getElementById("problemId").focus();
+      return;
+    }
+    err.style.display = "none";
+
+    // language 和 jresult 永远携带（默认 -1）；用户名和题号填了才带
+    var params = [];
+    if (pid)  params.push("problem_id=" + encodeURIComponent(pid));
+    if (user) params.push("user_id=" + encodeURIComponent(user));
+    params.push("language=" + lang);
+    params.push("jresult=" + jres);
+    window.location.href = "https://www.liyangoj.com/status.php?" + params.join("&");
+  }
+
+  document.getElementById("problemId").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") go();
+  });
+  document.getElementById("userName").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") go();
+  });
+
+  // 开始输入时隐藏错误提示
+  document.getElementById("problemId").addEventListener("input", function () {
+    document.getElementById("errTip").style.display = "none";
+  });
+</script>
+</body>
+</html>
