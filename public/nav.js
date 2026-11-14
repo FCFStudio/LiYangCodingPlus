@@ -31,8 +31,8 @@
     '        <a href="/">首页</a>',
     '        <a href="/lesson">课程</a>',
     '        <a href="/problem">题目</a>',
-    '        <a href="/user/">查询励洋用户</a>
-        <a href="/status/">查询提交记录</a>',
+    '        <a href="/user/">查询励洋用户</a>',
+    '        <a href="/status/">查询提交记录</a>',
     '      </div>',
     '    </div>',
     '',
