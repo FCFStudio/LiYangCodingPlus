@@ -80,7 +80,8 @@
     height: 60px;
     padding: 0 32px;
     background: var(--white);
-    box-shadow: 0 1px 3px rgba(249, 115, 22, 0.08);
+    /* 底部边缘阴影（仿励洋 OJ / Semantic UI menu 的 0 1px 3px rgba(0,0,0,.1)） */
+    box-shadow: 0 1px 3px 0 rgba(34, 36, 38, 0.15), 0 2px 8px 0 rgba(0, 0, 0, 0.05);
   }
 
   .navbar .logo {
