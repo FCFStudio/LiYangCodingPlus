@@ -39,16 +39,88 @@
 
   .search-box input:focus { border-color: var(--primary); }
 
-  .search-box .search-label {
+  /* 搜索范围多选下拉 */
+  .search-box .ms {
+    position: relative;
+    display: flex;
+  }
+
+  .search-box .ms-btn {
     display: flex;
     align-items: center;
-    padding: 0 16px;
+    gap: 6px;
+    padding: 0 14px;
     border: 1px solid #fed7aa;
     border-radius: 0 4px 4px 0;
     background: var(--primary-light);
     color: var(--primary-dark);
     font-size: 13px;
+    font-family: inherit;
     white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .search-box .ms-btn:hover { background: #ffe8d3; }
+
+  .search-box .ms-btn .caret {
+    display: inline-flex;
+    width: 11px;
+    height: 11px;
+    transition: transform 0.2s;
+  }
+
+  .search-box .ms-btn .caret svg { display: block; width: 100%; height: 100%; }
+
+  .search-box .ms.open .ms-btn .caret { transform: rotate(180deg); }
+
+  .ms-panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 50;
+    min-width: 200px;
+    padding: 6px;
+    background: var(--white);
+    border: 1px solid #fed7aa;
+    border-radius: 6px;
+    box-shadow: 0 6px 20px rgba(249, 115, 22, 0.12);
+  }
+
+  .ms-panel[hidden] { display: none; }
+
+  /* 透明桥接：填住按钮与面板之间的 8px 间隙，
+     鼠标下移进入面板时不会触发 mouseleave（悬浮展开才需要） */
+  .ms-panel::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -8px;
+    height: 8px;
+  }
+
+  .ms-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--text);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .ms-item:hover { background: var(--primary-light); }
+
+  .ms-item input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    accent-color: var(--primary);
+    cursor: pointer;
   }
 
   /* 无匹配提示 */
@@ -140,10 +212,21 @@
 <main class="main" id="listView">
   <h1 class="page-title">课程列表</h1>
 
-  <!-- 搜索：输入即过滤，无需回车 -->
+  <!-- 关键字搜索：输入即过滤；右侧多选下拉控制过滤与回车匹配的范围 -->
   <div class="search-box">
-    <input type="text" id="searchInput" placeholder="输入课程名搜索，如：第一课 或 C++" oninput="filterLessons()" autocomplete="off">
-    <span class="search-label">搜索课程</span>
+    <input type="text" id="searchInput" placeholder="输入课时号 / 课程名搜索，Enter 直接跳转" oninput="filterLessons()" autocomplete="off">
+    <div class="ms" id="ms">
+      <button type="button" class="ms-btn" id="msBtn" aria-haspopup="true" aria-expanded="false">
+        <span id="msBtnText">搜索范围</span>
+        <span class="caret"><svg viewBox="0 0 320 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.4 9.4-24.6 9.4-33.9 0z"/></svg></span>
+      </button>
+      <div class="ms-panel" id="msPanel" hidden>
+        <label class="ms-item"><input type="checkbox" data-opt="lidLive" checked> 课时号自动过滤</label>
+        <label class="ms-item"><input type="checkbox" data-opt="lidEnter" checked> 课时号回车完全匹配</label>
+        <label class="ms-item"><input type="checkbox" data-opt="nameLive" checked> 课程自动过滤</label>
+        <label class="ms-item"><input type="checkbox" data-opt="nameEnter" checked> 课程回车完全匹配</label>
+      </div>
+    </div>
   </div>
 
   <!-- 课程列表由 /api/lessons 渲染 -->
@@ -209,31 +292,79 @@
     return s.toLowerCase().replace(/[\s\t]/g, "");
   }
 
-  // 每输入一个字符即时过滤：仅匹配课时名与课程名（归一化后半匹配）
+  // ===== 搜索范围选项（默认全选；课程无标签系统，不含标签项） =====
+  var OPT = { lidLive: true, lidEnter: true, nameLive: true, nameEnter: true };
+
+  // 按钮文案：全选时显示「搜索范围」，否则显示已选数量
+  function updateMsBtn() {
+    var keys = Object.keys(OPT);
+    var on = keys.filter(function (k) { return OPT[k]; }).length;
+    document.getElementById("msBtnText").textContent =
+      on === keys.length ? "搜索范围" : "已选 " + on + "/" + keys.length;
+  }
+
+  (function initMs() {
+    var wrap = document.getElementById("ms");
+    var btn = document.getElementById("msBtn");
+    var panel = document.getElementById("msPanel");
+
+    function setOpen(open) {
+      panel.hidden = !open;
+      wrap.classList.toggle("open", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+
+    // 鼠标悬浮即展开，移出整个区域（按钮+面板）即收起
+    wrap.addEventListener("mouseenter", function () { setOpen(true); });
+    wrap.addEventListener("mouseleave", function () { setOpen(false); });
+
+    // 点击切换：兼顾触屏设备（无 hover）
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      setOpen(panel.hidden);
+    });
+
+    // 点击面板外部关闭
+    document.addEventListener("click", function (e) {
+      if (!wrap.contains(e.target)) setOpen(false);
+    });
+
+    // 勾选变化：更新状态并立即重新过滤
+    panel.addEventListener("change", function (e) {
+      var box = e.target;
+      if (box.type !== "checkbox") return;
+      OPT[box.dataset.opt] = box.checked;
+      updateMsBtn();
+      filterLessons();
+    });
+  })();
+
+  // 每输入一个字符即时过滤：按已开启的项（课时号 / 课程名）做归一化包含匹配
   function filterLessons() {
     var q = norm(document.getElementById("searchInput").value);
+    var anyLive = OPT.lidLive || OPT.nameLive;
     var rows = document.querySelectorAll("#lessonList a");
     var visible = 0;
     rows.forEach(function (row) {
-      var lid = norm(row.querySelector(".lid").textContent);
-      var name = norm(row.querySelector(".lname").textContent);
-      var match = q === "" || lid.indexOf(q) !== -1 || name.indexOf(q) !== -1;
+      var match = q === "" || !anyLive;
+      if (!match && OPT.lidLive && norm(row.querySelector(".lid").textContent).indexOf(q) !== -1) match = true;
+      if (!match && OPT.nameLive && norm(row.querySelector(".lname").textContent).indexOf(q) !== -1) match = true;
       row.style.display = match ? "" : "none";
       if (match) visible++;
     });
     document.getElementById("noResult").style.display = visible === 0 ? "block" : "none";
   }
 
-  // 按 Enter：课时名或课程名归一化后完全匹配时跳转到该课，否则无效
+  // 按 Enter：按已开启的项做完全匹配，命中即跳转（先课时号，后课程名）
   document.getElementById("searchInput").addEventListener("keydown", function (e) {
     if (e.key !== "Enter") return;
     var q = norm(this.value);
     if (!q) return;
     var rows = document.querySelectorAll("#lessonList a");
     for (var i = 0; i < rows.length; i++) {
-      var lid = norm(rows[i].querySelector(".lid").textContent);
-      var name = norm(rows[i].querySelector(".lname").textContent);
-      if (lid === q || name === q) {
+      var lidHit = OPT.lidEnter && norm(rows[i].querySelector(".lid").textContent) === q;
+      var nameHit = OPT.nameEnter && norm(rows[i].querySelector(".lname").textContent) === q;
+      if (lidHit || nameHit) {
         window.location.href = rows[i].getAttribute("href");
         return;
       }
