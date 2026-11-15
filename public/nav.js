@@ -6,6 +6,9 @@
 // 导航栏样式在 common.css 中；修改导航栏内容只改本文件即可。
 
 (function () {
+  // FontAwesome fa-angle-down 图标（内联 SVG，无需引入 FontAwesome 样式文件）
+  var arrowSvg = '<svg viewBox="0 0 320 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.4 9.4-24.6 9.4-33.9 0z"/></svg>';
+
   var html = [
     '<nav class="navbar">',
     '  <a class="logo" href="/">',
@@ -16,7 +19,7 @@
     '  <div class="nav-menus">',
     '    <!-- 下拉框一：FCF工作室 -->',
     '    <div class="dropdown">',
-    '      <button class="dropdown-btn">FCF工作室 <span class="arrow">▼</span></button>',
+    '      <button class="dropdown-btn">FCF工作室 <span class="arrow">' + arrowSvg + '</span></button>',
     '      <div class="dropdown-menu">',
     '        <a href="https://fcfstudio.pages.dev" target="_blank" rel="noopener">FCF官网</a>',
     '        <a href="/about/">关于</a>',
@@ -26,7 +29,7 @@
     '',
     '    <!-- 下拉框二：站内导航 -->',
     '    <div class="dropdown">',
-    '      <button class="dropdown-btn">站内导航 <span class="arrow">▼</span></button>',
+    '      <button class="dropdown-btn">站内导航 <span class="arrow">' + arrowSvg + '</span></button>',
     '      <div class="dropdown-menu">',
     '        <a href="/">首页</a>',
     '        <a href="/lesson">课程</a>',
@@ -38,7 +41,7 @@
     '',
     '    <!-- 下拉框三：官方站点 -->',
     '    <div class="dropdown">',
-    '      <button class="dropdown-btn">官方站点 <span class="arrow">▼</span></button>',
+    '      <button class="dropdown-btn">官方站点 <span class="arrow">' + arrowSvg + '</span></button>',
     '      <div class="dropdown-menu">',
     '        <a href="https://liyangcode.com/" target="_blank" rel="noopener">励洋官网</a>',
     '        <a href="https://www.liyangoj.com/" target="_blank" rel="noopener">励洋OJ</a>',
