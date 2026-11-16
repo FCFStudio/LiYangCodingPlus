@@ -85,9 +85,18 @@
     border: 1px solid #fed7aa;
     border-radius: 6px;
     box-shadow: 0 6px 20px rgba(249, 115, 22, 0.12);
+    /* 展开动画：淡入 + 从上方 6px 落下（与导航栏下拉菜单一致） */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
   }
 
-  .ms-panel[hidden] { display: none; }
+  .ms.open .ms-panel {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
 
   /* 透明桥接：填住按钮与面板之间的 8px 间隙，
      鼠标下移进入面板时不会触发 mouseleave（悬浮展开才需要） */
@@ -216,7 +225,7 @@
         <span id="msBtnText">搜索范围</span>
         <span class="caret"><svg viewBox="0 0 320 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.4 9.4-24.6 9.4-33.9 0z"/></svg></span>
       </button>
-      <div class="ms-panel" id="msPanel" hidden>
+      <div class="ms-panel" id="msPanel">
         <label class="ms-item"><input type="checkbox" data-opt="pidLive" checked> 题号自动过滤</label>
         <label class="ms-item"><input type="checkbox" data-opt="pidEnter" checked> 题号回车完全匹配</label>
         <label class="ms-item"><input type="checkbox" data-opt="tagLive" checked> 标签自动过滤</label>
@@ -397,7 +406,6 @@
     var panel = document.getElementById("msPanel");
 
     function setOpen(open) {
-      panel.hidden = !open;
       wrap.classList.toggle("open", open);
       btn.setAttribute("aria-expanded", open ? "true" : "false");
     }

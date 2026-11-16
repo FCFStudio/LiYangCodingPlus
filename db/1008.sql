@@ -1,12 +1,12 @@
 -- 运行：npx wrangler d1 execute liyang-db --remote --yes --file=./db/1008.sql
 INSERT INTO problems (id, name, description, input_format, output_format, hint, solution, sort_order)
 VALUES (
-  '1008',
-  '【编程入门】字符图形9-数字正三角',
-  '输入一个整数打印字符图形',
-  '一个整数（０＜Ｎ＜１０）',
-  '一个字符图形',
-  '本题只有一个测试点',
+  '1009',
+  '【编程入门】数组逆序',
+  '给你m个整数，将其逆序输出',
+  '第一行一个整数m（3 <= m <= 100 )：数的个数 第二行m个整数（空格隔开）（这些数在0-9999999之间)',
+  'm个整数（空格隔开）',
+  '',
   '#include <iostream>
 using namespace std;
 int main() {
