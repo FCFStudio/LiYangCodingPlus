@@ -26,9 +26,26 @@ function highlightCpp(code) {
   });
 }
 
+// 只还原 HTML 实体（不解析标签）：数据库里存成 &lt; 的代码显示时转回 <
+// &amp; 放最后，保证 "&amp;lt;" 还原为字面 "&lt;" 而不是 "<"
+var HTML_ENTITIES = [
+  [/&lt;/g, "<"],
+  [/&gt;/g, ">"],
+  [/&quot;/g, '"'],
+  [/&#39;/g, "'"],
+  [/&nbsp;/g, " "],
+  [/&amp;/g, "&"]
+];
+
+function unescapeEntities(s) {
+  HTML_ENTITIES.forEach(function (p) { s = s.replace(p[0], p[1]); });
+  return s;
+}
+
 function renderSolution() {
   var src = document.getElementById("solutionSource").textContent.replace(/\s+$/, "\n");
-  document.getElementById("solutionCode").innerHTML = highlightCpp(src);
+  // 实体还原后仍走 highlightCpp 内部的转义，浏览器最终显示原始字符
+  document.getElementById("solutionCode").innerHTML = highlightCpp(unescapeEntities(src));
   var count = src.replace(/\n$/, "").split("\n").length;
   var nums = [];
   for (var i = 1; i <= count; i++) nums.push(i);
