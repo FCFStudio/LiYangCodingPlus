@@ -19,10 +19,10 @@
 
 ```
 ① 把讲义 PDF 放进 public/lesson/files/（如 3.pdf）
-② 复制 db/template-lesson.sql → 改名（如 lesson3.sql）
+② 复制 db/lesson/template-lesson.sql → 改名（如 lesson3.sql），仍放在 db/lesson/ 下
 ③ 打开副本，按下表逐项修改
 ④ 执行命令：
-   npx wrangler d1 execute liyang-db --remote --yes --file=./db/lesson3.sql
+   npx wrangler d1 execute liyang-db --remote --yes --file=./db/lesson/lesson3.sql
 ⑤ PDF 文件和 db 里的新文件 git push 上线
 ```
 
@@ -91,7 +91,7 @@ npx wrangler d1 execute liyang-db --remote --command="SELECT id, title, name FRO
 数据库删了只是查不到这门课了，`public/lesson/files/3.pdf` 还在仓库里：
 
 - 不想留 → 删掉这个 PDF，连同 git 一起 push
-- 以后可能还用 → 留着，同时把 `db/lesson3.sql` 也留着，需要时按"增加课程"流程重新插入
+- 以后可能还用 → 留着，同时把 `db/lesson/lesson3.sql` 也留着，需要时按"增加课程"流程重新插入
 
 删除是永久的，没有回收站。
 
@@ -101,7 +101,7 @@ npx wrangler d1 execute liyang-db --remote --command="SELECT id, title, name FRO
 
 | 报错 | 原因 | 解决 |
 |---|---|---|
-| `Unable to read SQL text file` | 命令里的文件名和实际文件对不上 | 核对 `db/` 目录里的文件名 |
+| `Unable to read SQL text file` | 命令里的文件名和实际文件对不上 | 核对 `db/` 对应分类目录（problem/lesson/gg）里的文件名 |
 | `UNIQUE constraint failed: lessons.id` | 课程编号已存在 | 改课程应该用 UPDATE，别重跑 INSERT 文件 |
 | `near "xxx": syntax error` | 内容里有单引号截断了字符串 | 文字里的 `'` 写成 `''`；复杂内容改用 `.sql` 文件执行 |
 | 讲义下载 404 | `file_name` 和 `public/lesson/files/` 里的文件名对不上，或 PDF 还没 push | 核对文件名，确认 PDF 已 push 并等部署完成 |

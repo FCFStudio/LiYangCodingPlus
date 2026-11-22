@@ -1,5 +1,5 @@
 -- 公告模板：复制本文件 → 随便改名（如 gg.sql）→ 改内容 → 执行
---   npx wrangler d1 execute liyang-db --remote --yes --file=./db/gg.sql
+--   npx wrangler d1 execute liyang-db --remote --yes --file=./db/gg/gg.sql
 -- ⚠️ 命令里的文件名必须和你复制出来的文件名一模一样，否则报 "Unable to read SQL text file"
 -- 改完刷新首页即可看到，不用 push、不用重新部署
 --

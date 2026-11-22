@@ -1,6 +1,6 @@
 -- ============================================================
 -- 加一门新课程：复制这个文件 → 改名（比如 lesson3.sql）→ 改内容 → 跑命令
--- 运行：npx wrangler d1 execute liyang-db --remote --yes --file=./db/lesson3.sql
+-- 运行：npx wrangler d1 execute liyang-db --remote --yes --file=./db/lesson/lesson3.sql
 -- ⚠️ 命令里的文件名必须和你复制出来的文件名一模一样，否则报 "Unable to read SQL text file"
 -- 别忘了把讲义 PDF 放进 public/lesson/files/ 并 git push
 -- ============================================================

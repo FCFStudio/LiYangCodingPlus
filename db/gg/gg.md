@@ -25,14 +25,14 @@ npx wrangler d1 execute liyang-db --remote --yes --command="INSERT INTO announce
 
 ### 方式二：用 .sql 文件（内容长或一次加多条）
 
-1. 在 `db/` 新建一个文件（如 `gg1120.sql`），内容：
+1. 在 `db/gg/` 新建一个文件（如 `gg1120.sql`），内容：
 
 ```sql
 INSERT INTO announcements (content, date) VALUES ('公告内容一', '2026-11-20');
 INSERT INTO announcements (content, date) VALUES ('公告内容二', '2026-11-20');
 ```
 
-2. 执行：`npx wrangler d1 execute liyang-db --remote --yes --file=./db/gg1120.sql`
+2. 执行：`npx wrangler d1 execute liyang-db --remote --yes --file=./db/gg/gg1120.sql`
 3. 执行完可以删掉这个临时文件
 
 ⚠️ 命令里的文件名必须和实际文件名一模一样，否则报 `Unable to read SQL text file`。
@@ -91,7 +91,7 @@ npx wrangler d1 execute liyang-db --remote --yes --command="DELETE FROM announce
 
 | 报错 | 原因 | 解决 |
 |---|---|---|
-| `Unable to read SQL text file` | 命令里的文件名和实际文件对不上 | 核对 `db/` 目录里的文件名 |
+| `Unable to read SQL text file` | 命令里的文件名和实际文件对不上 | 核对 `db/` 对应分类目录（problem/lesson/gg）里的文件名 |
 | `near "xxx": syntax error` | 内容里有单引号截断了字符串 | 文字里的 `'` 写成 `''`；复杂内容改用 `.sql` 文件执行 |
 | `no such table: announcements` | 数据库还没建表 | 先按 `db/schema.sql` 顶部注释执行建表命令 |
 | 公告加了但首页不显示 | 日期格式不对 | `date` 统一写 `年-月-日`（如 `2026-11-17`） |

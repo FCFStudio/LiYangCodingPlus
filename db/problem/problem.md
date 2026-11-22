@@ -17,10 +17,10 @@
 ### 步骤
 
 ```
-① 复制 db/template-problem.sql → 改名（如 1008.sql）
+① 复制 db/problem/template-problem.sql → 改名（如 1008.sql），仍放在 db/problem/ 下
 ② 打开副本，按下表逐项修改
 ③ 执行命令：
-   npx wrangler d1 execute liyang-db --remote --yes --file=./db/1008.sql
+   npx wrangler d1 execute liyang-db --remote --yes --file=./db/problem/1008.sql
 ```
 
 ⚠️ 命令里的文件名必须和实际文件名一模一样，否则报 `Unable to read SQL text file`。
@@ -107,7 +107,7 @@ npx wrangler d1 execute liyang-db --remote --yes --command="UPDATE problems SET 
 
 题解是 C++ 代码，**代码里含单引号时必须用 `.sql` 文件方式**（`--command` 里写会被 PowerShell 吞掉）。做法：
 
-1. 在 `db/` 新建一个文件（如 `fix1007.sql`），内容：
+1. 在 `db/problem/` 新建一个文件（如 `fix1007.sql`），内容：
 
 ```sql
 UPDATE problems SET solution='#include <iostream>
@@ -118,7 +118,7 @@ int main(){
 ' WHERE id='1007';
 ```
 
-2. 执行：`npx wrangler d1 execute liyang-db --remote --yes --file=./db/fix1007.sql`
+2. 执行：`npx wrangler d1 execute liyang-db --remote --yes --file=./db/problem/fix1007.sql`
 3. 执行完可以删掉这个临时文件
 
 代码里避免单引号最省事：字符比较用 ASCII 码（`'A'` 写成 `65`，`'.'` 写成 `46`）。
@@ -221,7 +221,7 @@ npx wrangler d1 execute liyang-db --remote --yes --command="DELETE FROM problems
 npx wrangler d1 execute liyang-db --remote --command="SELECT id, name FROM problems ORDER BY CAST(id AS INTEGER)"
 ```
 
-删除是永久的，没有回收站。如果这题以后可能还用，把对应的 `db/xxx.sql` 文件留着，需要时按"新建题"流程重新插入。
+删除是永久的，没有回收站。如果这题以后可能还用，把对应的 `db/problem/xxx.sql` 文件留着，需要时按"新建题"流程重新插入。
 
 ---
 
@@ -229,7 +229,7 @@ npx wrangler d1 execute liyang-db --remote --command="SELECT id, name FROM probl
 
 | 报错 | 原因 | 解决 |
 |---|---|---|
-| `Unable to read SQL text file` | 命令里的文件名和实际文件对不上 | 核对 `db/` 目录里的文件名 |
+| `Unable to read SQL text file` | 命令里的文件名和实际文件对不上 | 核对 `db/` 对应分类目录（problem/lesson/gg）里的文件名 |
 | `UNIQUE constraint failed: problems.id` | 题号已存在 | 改题应该用 UPDATE，别重跑 INSERT 文件 |
 | `near "A": syntax error` | SQL 字符串里混入了裸引号（如 `\'A\'`） | 字符比较改用 ASCII 码（`65`），或用 `''` 转义 |
 | `near "xxx": syntax error`（其他） | 内容里有单引号截断了字符串 | 文字里的 `'` 写成 `''`；复杂内容改用 `.sql` 文件执行 |

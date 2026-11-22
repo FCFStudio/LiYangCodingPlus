@@ -59,4 +59,28 @@
   } else {
     document.body.insertAdjacentHTML("afterbegin", html);
   }
+
+  // ===== 全站按钮扁平波纹 =====
+  // 按下（mousedown）时在点击位置生成一个半透明圆，扩散淡出后移除。
+  // 样式（.ripple-host / .ripple）在 common.css。列表行、下拉菜单项不是按钮，不触发。
+  document.addEventListener("mousedown", function (e) {
+    var el = e.target.closest("button, .quick-links a, .handout-btn, .err-actions a");
+    if (!el) return;
+
+    var r = el.getBoundingClientRect();
+    var size = Math.max(r.width, r.height) * 2;
+    var ripple = document.createElement("span");
+    ripple.className = "ripple";
+    ripple.style.width = size + "px";
+    ripple.style.height = size + "px";
+    ripple.style.left = (e.clientX - r.left - size / 2) + "px";
+    ripple.style.top = (e.clientY - r.top - size / 2) + "px";
+
+    el.classList.add("ripple-host");
+    el.appendChild(ripple);
+    ripple.addEventListener("animationend", function () {
+      ripple.remove();
+      el.classList.remove("ripple-host");
+    });
+  });
 })();

@@ -1,4 +1,4 @@
--- 运行：npx wrangler d1 execute liyang-db --remote --yes --file=./db/1009.sql
+-- 运行：npx wrangler d1 execute liyang-db --remote --yes --file=./db/problem/1009.sql
 INSERT INTO problems (id, name, description, input_format, output_format, hint, solution, sort_order)
 VALUES (
   '1009',
