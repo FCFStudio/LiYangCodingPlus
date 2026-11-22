@@ -18,49 +18,49 @@ const int N=3e5+10;
 int n,k,T,m,b[N];
 vector<pair<int,int> >a;
 bool check(int x){
-	memset(b,0,sizeof(b));
-	int cnt=0;
-	for(int l=0,r=1;r<a.size();r++){
-		if(r-1>l&&a[r-1].second){
-			b[a[r-1].second]++;
-			if(b[a[r-1].second]==1) cnt++;
-		}
-		while(cnt>n-k){
-			if(l+1<r&&a[l+1].second){
-				b[a[l+1].second]--;
-				if(b[a[l+1].second]==0)cnt--;
-			}
-			l++;
-		}
-		if(a[r].first-a[l].first>=x)return true;
-	}
-	return false;
+  memset(b,0,sizeof(b));
+  int cnt=0;
+  for(int l=0,r=1;r<a.size();r++){
+      if(r-1>l&&a[r-1].second){
+          b[a[r-1].second]++;
+          if(b[a[r-1].second]==1) cnt++;
+      }
+      while(cnt>n-k){
+          if(l+1<r&&a[l+1].second){
+              b[a[l+1].second]--;
+              if(b[a[l+1].second]==0)cnt--;
+          }
+          l++;
+      }
+      if(a[r].first-a[l].first>=x)return true;
+  }
+  return false;
 } 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(0);cout.tie(0);
-    cin>>n>>k>>T;
-    a.push_back({0,0});
-    for(int i=1;i<=n;i++){
-    	cin>>m;
-    	while(m--){
-    		int t;
-    		cin>>t;
-    		a.push_back({t,i});
-		} 
-	}
-	sort(a.begin(),a.end());
-	a.push_back({T,0});
-	int l=0,r=T,ans=-1;
-	while(l<=r){
-		int mid=(l+r)/2;
-		if(check(mid)){
-			ans=mid;
-			l=mid+1;
-		}else r=mid-1;
-	}
-	cout<<ans;
-	return 0;
+  ios::sync_with_stdio(false);
+  cin.tie(0);cout.tie(0);
+  cin>>n>>k>>T;
+  a.push_back({0,0});
+  for(int i=1;i<=n;i++){
+      cin>>m;
+      while(m--){
+        int t;
+        cin>>t;
+        a.push_back({t,i});
+      } 
+  }
+  sort(a.begin(),a.end());
+  a.push_back({T,0});
+  int l=0,r=T,ans=-1;
+  while(l<=r){
+      int mid=(l+r)/2;
+      if(check(mid)){
+          ans=mid;
+          l=mid+1;
+      }else r=mid-1;
+  }
+  cout<<ans;
+  return 0;
 }
 ',                                    -- 题解（纯 C++ 代码，前端自动高亮）
   4471                                   -- 排序值：填和题号一样的数字（列表按题号由小到大自动排序）

@@ -27,16 +27,49 @@ function renderMD(text) {
 }
 
 // MediaWiki 风格下标：~x~ → <sub>x</sub>
-// 内层先渲染，天然支持嵌套（t~i,m~i~~ → t<sub>i,m<sub>i</sub></sub>）
+// 波浪号配对用回溯解析：每个 ~ 作为开层或闭层，要求全部消耗、
+// 结尾无未闭合层、每层内容非空；无解时原样保留（孤立 ~ 不误伤）。
+// 优先闭层 → 相邻下标（a~1~,b~2~）各自独立不跨界；闭层走不通再回溯开层 →
+// 嵌套写法（t~i,m~i~~）也能正确解析为 t<sub>i,m<sub>i</sub></sub>。
 function renderSubs(s) {
-  var re = /~((?:[^~]|~[^~]+~)+)~/g;
+  var pos = [];
+  for (var i = 0; i < s.length; i++) if (s.charAt(i) === "~") pos.push(i);
+  // 波浪太多时回溯代价过高，直接不处理（正常题面到不了这个量级）
+  if (pos.length === 0 || pos.length > 30) return s;
+
+  var acts = [];       // 每个波浪的分工：1=开层 0=闭层
+  var actions = null;  // 第一个可行解
+  function solve(idx, stack) {
+    if (actions) return;
+    if (idx === pos.length) {
+      if (stack.length === 0) actions = acts.slice();
+      return;
+    }
+    // 优先闭层：内容（去掉内部波浪后）非空才允许
+    if (stack.length > 0) {
+      var inner = s.slice(stack[stack.length - 1] + 1, pos[idx]).replace(/~/g, "");
+      if (inner.length > 0) {
+        acts.push(0);
+        solve(idx + 1, stack.slice(0, stack.length - 1));
+        acts.pop();
+        if (actions) return;
+      }
+    }
+    // 闭层走不通 → 作为新的开层
+    acts.push(1);
+    solve(idx + 1, stack.concat([pos[idx]]));
+    acts.pop();
+  }
+  solve(0, []);
+  if (!actions) return s;
+
+  // 按解析结果重建：文本与 <sub>/</sub> 交替输出，天然形成嵌套
   var out = "";
   var last = 0;
-  var m;
-  while ((m = re.exec(s)) !== null) {
-    out += s.slice(last, m.index) + "<sub>" + renderSubs(m[1]) + "</sub>";
-    last = m.index + m[0].length;
-    re.lastIndex = last;
+  for (var k = 0; k < pos.length; k++) {
+    out += s.slice(last, pos[k]);
+    out += actions[k] === 1 ? "<sub>" : "</sub>";
+    last = pos[k] + 1;
   }
   return out + s.slice(last);
 }
