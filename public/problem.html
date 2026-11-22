@@ -507,13 +507,16 @@
     if (p.samples && p.samples.length) {
       var box = document.getElementById("dSamples");
       p.samples.forEach(function (s) {
+        // 每对输入、输出占一行；行与行上下衔接成阶梯
         box.insertAdjacentHTML("beforeend",
-          '<div class="io"><h3>输入样例</h3>'
+          '<div class="sample-pair">'
+          + '<div class="io"><h3>输入样例</h3>'
           + '<div class="code-row"><pre>' + s.input + '</pre>'
           + '<button class="copy-btn" onclick="copyCode(this)">复制</button></div></div>'
           + '<div class="io"><h3>输出样例</h3>'
           + '<div class="code-row"><pre>' + s.output + '</pre>'
-          + '<button class="copy-btn" onclick="copyCode(this)">复制</button></div></div>');
+          + '<button class="copy-btn" onclick="copyCode(this)">复制</button></div></div>'
+          + '</div>');
       });
       document.getElementById("secSample").hidden = false;
     }

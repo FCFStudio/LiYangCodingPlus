@@ -58,10 +58,17 @@
     line-height: 1.8;
   }
 
+  /* 样例：每对输入输出一行，行间紧接成阶梯（下一行顶端 = 上一行最低处 + 小间隙） */
   .sample {
     display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .sample-pair {
+    display: flex;
     gap: 16px;
-    flex-wrap: wrap;
+    align-items: flex-start;
   }
 
   .sample .io {
